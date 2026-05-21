@@ -8,635 +8,1044 @@
 <meta name="apple-mobile-web-app-title" content="Gym">
 <title>Gym</title>
 <style>
-  :root {
-    --bg: #0e0e0f;
-    --bg2: #1a1a1c;
-    --bg3: #242426;
-    --border: rgba(255,255,255,0.08);
-    --border2: rgba(255,255,255,0.14);
-    --text: #f0f0f0;
-    --muted: #888;
-    --faint: #555;
-    --green: #3ddc84;
-    --green-bg: rgba(61,220,132,0.12);
-    --green-border: rgba(61,220,132,0.3);
-    --red: #ff6b6b;
-    --red-bg: rgba(255,107,107,0.12);
-    --amber: #f5a623;
-    --amber-bg: rgba(245,166,35,0.12);
-    --blue: #4a9eff;
-    --blue-bg: rgba(74,158,255,0.12);
-    --radius: 14px;
-    --radius-sm: 9px;
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; background: var(--bg); color: var(--text); font-family: -apple-system, 'SF Pro Display', sans-serif; overflow: hidden; }
+:root{
+  --bg:#0e0e0f;--bg2:#1a1a1c;--bg3:#242426;--bg4:#2e2e30;
+  --border:rgba(255,255,255,0.08);--border2:rgba(255,255,255,0.14);
+  --text:#f0f0f0;--muted:#888;--faint:#444;
+  --green:#3ddc84;--green-bg:rgba(61,220,132,0.12);--green-border:rgba(61,220,132,0.3);
+  --red:#ff6b6b;--red-bg:rgba(255,107,107,0.12);--red-border:rgba(255,107,107,0.3);
+  --amber:#f5a623;--amber-bg:rgba(245,166,35,0.12);--amber-border:rgba(245,166,35,0.3);
+  --blue:#4a9eff;--blue-bg:rgba(74,158,255,0.12);--blue-border:rgba(74,158,255,0.3);
+  --purple:#b388ff;--purple-bg:rgba(179,136,255,0.12);--purple-border:rgba(179,136,255,0.3);
+  --radius:14px;--radius-sm:9px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:var(--bg);color:var(--text);font-family:-apple-system,'SF Pro Display',sans-serif;overflow:hidden}
+#app{display:flex;flex-direction:column;height:100vh;height:-webkit-fill-available}
+#screen{flex:1;overflow-y:auto;overflow-x:clip;-webkit-overflow-scrolling:touch;padding:0 0 84px}
+#screen::-webkit-scrollbar{display:none}
 
-  /* Layout */
-  #app { display: flex; flex-direction: column; height: 100vh; height: -webkit-fill-available; }
-  #screen { flex: 1; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; padding: 0 0 80px; }
-  #screen::-webkit-scrollbar { display: none; }
+/* NAV */
+#navbar{position:fixed;bottom:0;left:0;right:0;display:flex;background:rgba(14,14,15,0.96);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid var(--border2);padding-bottom:env(safe-area-inset-bottom);z-index:100}
+.nav-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:9px 0 7px;gap:3px;cursor:pointer;border:none;background:none;color:var(--faint);font-size:9px;font-weight:500;letter-spacing:0.03em;transition:color 0.15s}
+.nav-btn.on{color:var(--green)}
+.nav-btn svg{width:20px;height:20px}
 
-  /* Nav bar */
-  #navbar {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    display: flex; background: rgba(14,14,15,0.92);
-    backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-    border-top: 0.5px solid var(--border2);
-    padding-bottom: env(safe-area-inset-bottom);
-    z-index: 100;
-  }
-  .nav-btn {
-    flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
-    padding: 10px 0 8px; gap: 4px; cursor: pointer; border: none; background: none;
-    color: var(--faint); font-size: 10px; font-weight: 500; letter-spacing: 0.03em; transition: color 0.15s;
-  }
-  .nav-btn.on { color: var(--green); }
-  .nav-btn svg { width: 22px; height: 22px; }
+/* PAGES */
+.page{display:none}.page.on{display:block}
+.page-header{padding:52px 20px 8px}
+.page-title{font-size:28px;font-weight:700;letter-spacing:-0.5px}
+.page-sub{font-size:13px;color:var(--muted);margin-top:3px}
 
-  /* Header */
-  .page-header { padding: 56px 20px 8px; }
-  .page-title { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
-  .page-sub { font-size: 13px; color: var(--muted); margin-top: 3px; }
+/* COMMON */
+.sec-label{padding:16px 16px 8px;font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:0.07em}
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);margin:0 16px 12px;overflow:hidden}
+.tip-box{margin:0 16px 12px;padding:13px 15px;background:var(--bg3);border-radius:var(--radius-sm);font-size:12px;color:var(--muted);line-height:1.6;border-left:2px solid var(--green)}
+.tip-box strong{color:var(--text)}
+.btn-row{display:flex;gap:10px;padding:0 16px 12px}
+.btn{flex:1;padding:12px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--bg2);color:var(--muted);text-align:center;transition:all 0.12s;-webkit-appearance:none}
+.btn:active{opacity:0.7}
+.btn.green{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.btn.red{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+.badge{font-size:10px;padding:2px 7px;border-radius:10px;white-space:nowrap;display:inline-block;vertical-align:middle}
+.b-shoulder{background:var(--amber-bg);color:var(--amber);border:0.5px solid var(--amber-border);margin-left:6px}
+.b-new{background:var(--blue-bg);color:var(--blue);border:0.5px solid var(--blue-border);margin-left:6px}
 
-  /* Pages */
-  .page { display: none; }
-  .page.on { display: block; }
+/* WORKOUT */
+.mode-strip{display:flex;gap:8px;padding:14px 16px 0}
+.mode-btn{flex:1;padding:10px 6px;border-radius:var(--radius-sm);text-align:center;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:var(--bg3);color:var(--muted);transition:all 0.15s}
+.mode-btn.on.mA{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.mode-btn.on.mB{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+.mode-btn.on.mC{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+.mode-desc{margin:10px 16px 0;padding:12px 14px;border-radius:var(--radius-sm);background:var(--bg3);font-size:12px;color:var(--muted);line-height:1.6}
+.mode-desc strong{color:var(--text);display:block;margin-bottom:2px}
+.day-tabs{display:flex;gap:8px;padding:12px 16px 0;overflow-x:auto}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{flex-shrink:0;padding:7px 16px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--bg2);color:var(--muted);transition:all 0.15s}
+.day-tab.on{background:var(--green);border-color:var(--green);color:#000}
+.ex-row{padding:13px 16px;border-bottom:0.5px solid var(--border)}
+.ex-row:last-child{border-bottom:none}
+.ex-name{font-size:14px;font-weight:600;margin-bottom:2px}
+.ex-note{font-size:11px;color:var(--muted);line-height:1.5;margin-bottom:8px}
+.sliders{display:flex;flex-direction:column;gap:7px;margin-bottom:8px}
+.sl-group{display:flex;flex-direction:row;align-items:center;gap:8px}
+.sl-label{font-size:10px;color:var(--faint);text-transform:uppercase;letter-spacing:0.06em;width:34px;flex-shrink:0}
+.sl-track{flex:1;position:relative}
+.sl-track input[type=range]{width:100%;-webkit-appearance:none;height:3px;background:var(--bg4);border-radius:2px;outline:none;display:block}
+.sl-track input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--green);cursor:pointer}
+.sl-val{font-size:13px;font-weight:600;color:var(--text);width:42px;text-align:right;flex-shrink:0}
+.pb-badge{font-size:10px;color:var(--amber);margin-left:6px;font-weight:600}
+.bw-toggle{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;cursor:pointer;border:1px solid var(--border2);background:var(--bg3);color:var(--muted);flex-shrink:0;transition:all 0.15s;user-select:none}
+.bw-toggle.bw-on{background:var(--amber-bg);border-color:var(--amber-border);color:var(--amber)}
+.vol-bar{margin:10px 16px 0;padding:12px 15px;background:var(--bg3);border-radius:var(--radius-sm);display:flex;justify-content:space-between}
+.vol-item{text-align:center}
+.vol-val{font-size:16px;font-weight:700;color:var(--green)}
+.vol-lbl{font-size:10px;color:var(--faint);margin-top:2px}
+.notes-wrap{margin:10px 16px 0}
+.notes-input{width:100%;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:11px 13px;color:var(--text);font-size:13px;outline:none;-webkit-appearance:none;resize:none;font-family:-apple-system,sans-serif}
+.notes-input::placeholder{color:var(--faint)}
 
-  /* Cards */
-  .card {
-    background: var(--bg2); border: 0.5px solid var(--border);
-    border-radius: var(--radius); margin: 0 16px 12px; overflow: hidden;
-  }
-  .card-header {
-    display: flex; justify-content: space-between; align-items: center;
-    padding: 14px 16px; border-bottom: 0.5px solid var(--border);
-  }
-  .card-title { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; text-transform: uppercase; color: var(--muted); }
-  .card-action { font-size: 13px; color: var(--green); font-weight: 500; cursor: pointer; }
+/* PROGRESS - CALENDAR */
+.cal-nav{display:flex;align-items:center;justify-content:space-between;padding:0 16px 12px}
+.cal-month{font-size:17px;font-weight:700}
+.cal-arrow{width:34px;height:34px;border-radius:50%;background:var(--bg3);border:0.5px solid var(--border2);display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:16px;color:var(--text)}
+.cal-arrow:active{background:var(--bg4)}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 16px 4px}
+.cal-dow-label{text-align:center;font-size:10px;font-weight:600;color:var(--faint);padding:2px 0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px;padding:0 16px 16px}
+.cal-cell{aspect-ratio:1;border-radius:8px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;background:var(--bg3);border:0.5px solid var(--border);font-size:12px;font-weight:500;color:var(--muted);transition:all 0.1s;user-select:none;gap:2px}
+.cal-cell.empty{background:transparent;border-color:transparent;cursor:default}
+.cal-cell.future{opacity:0.25;cursor:default}
+.cal-cell.today{border:1.5px solid var(--green);color:var(--text)}
+.cal-cell.done{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.cal-cell.skip{background:var(--red-bg);border-color:var(--red-border);color:var(--red)}
+.cal-dot{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:0.7}
+.streak-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px 16px}
+.sstat{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:11px 12px;text-align:center}
+.sstat-val{font-size:20px;font-weight:700}
+.sstat-lbl{font-size:10px;color:var(--muted);margin-top:2px}
+.alert-box{margin:0 16px 12px;padding:13px 15px;border-radius:var(--radius);background:var(--red-bg);border:1px solid var(--red-border);font-size:13px;color:var(--red);line-height:1.5;display:none}
+.alert-box strong{display:block;font-size:14px;margin-bottom:3px}
 
-  /* Day tabs */
-  .day-tabs { display: flex; gap: 8px; padding: 16px 16px 0; overflow-x: auto; }
-  .day-tabs::-webkit-scrollbar { display: none; }
-  .day-tab {
-    flex-shrink: 0; padding: 7px 16px; border-radius: 20px;
-    font-size: 13px; font-weight: 600; cursor: pointer; border: 1px solid var(--border2);
-    background: var(--bg2); color: var(--muted); transition: all 0.15s;
-  }
-  .day-tab.on { background: var(--green); border-color: var(--green); color: #000; }
+/* BODY TAB */
+.chart-wrap{margin:0 16px 12px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);padding:16px}
+.chart-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:12px}
+canvas{width:100%;display:block}
+.weight-input-row{display:flex;gap:10px;padding:0 16px 12px}
+.num-input{flex:1;background:var(--bg3);border:1px solid var(--border2);border-radius:var(--radius-sm);padding:12px 14px;color:var(--text);font-size:16px;outline:none;-webkit-appearance:none}
+.num-input::placeholder{color:var(--faint)}
+.pb-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:0 16px 16px}
+.pb-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius-sm);padding:12px 10px;text-align:center}
+.pb-lift{font-size:11px;color:var(--muted);margin-bottom:4px}
+.pb-val{font-size:22px;font-weight:700;color:var(--amber)}
+.pb-unit{font-size:11px;color:var(--faint)}
 
-  /* Exercise rows */
-  .ex-row { padding: 13px 16px; border-bottom: 0.5px solid var(--border); }
-  .ex-row:last-child { border-bottom: none; }
-  .ex-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
-  .ex-name { font-size: 14px; font-weight: 600; }
-  .ex-note { font-size: 11px; color: var(--muted); margin-top: 2px; line-height: 1.5; max-width: 240px; }
-  .ex-badge { font-size: 10px; padding: 2px 7px; border-radius: 10px; white-space: nowrap; flex-shrink: 0; margin-left: 8px; }
-  .badge-warn { background: var(--amber-bg); color: var(--amber); border: 0.5px solid rgba(245,166,35,0.3); }
-  .badge-new { background: var(--blue-bg); color: var(--blue); border: 0.5px solid rgba(74,158,255,0.3); }
+/* RECIPES */
+.filter-bar{display:flex;gap:8px;padding:12px 16px 0;overflow-x:auto}
+.filter-bar::-webkit-scrollbar{display:none}
+.filter-btn{flex-shrink:0;padding:6px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border2);background:var(--bg2);color:var(--muted);transition:all 0.15s}
+.filter-btn.on{background:var(--green-bg);border-color:var(--green-border);color:var(--green)}
+.recipe-card{margin:0 16px 10px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.recipe-top{padding:13px 16px;display:flex;justify-content:space-between;align-items:flex-start;cursor:pointer}
+.recipe-name{font-size:15px;font-weight:600;margin-bottom:5px}
+.recipe-meta{display:flex;gap:6px;flex-wrap:wrap}
+.rtag{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;border:0.5px solid}
+.rt-time{background:var(--blue-bg);color:var(--blue);border-color:var(--blue-border)}
+.rt-cal{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.rt-pro{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-border)}
+.rt-diff{background:var(--bg3);color:var(--muted);border-color:var(--border2)}
+.rt-cost{background:var(--purple-bg);color:var(--purple);border-color:var(--purple-border)}
+.rt-inlist{background:var(--green-bg);color:var(--green);border-color:var(--green-border)}
+.recipe-right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;flex-shrink:0;margin-left:10px}
+.star-btn{font-size:18px;cursor:pointer;line-height:1}
+.recipe-chevron{color:var(--faint);font-size:14px}
+.recipe-body{display:none;padding:0 16px 14px;border-top:0.5px solid var(--border)}
+.recipe-body.on{display:block}
+.rb-sec{font-size:10px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:0.06em;margin:12px 0 6px}
+.ing-row{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.ing-row:last-child{border-bottom:none}
+.ing-price{font-size:11px;color:var(--purple);margin-left:8px;flex-shrink:0}
+.step-row{display:flex;gap:10px;padding:5px 0;font-size:13px;color:var(--muted);line-height:1.5}
+.step-num{width:20px;height:20px;border-radius:50%;background:var(--bg3);color:var(--green);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+.macro-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.macro-box{background:var(--bg3);border-radius:var(--radius-sm);padding:8px;text-align:center}
+.macro-val{font-size:15px;font-weight:700;color:var(--green)}
+.macro-lbl{font-size:10px;color:var(--faint);margin-top:2px}
 
-  /* Sliders */
-  .sliders { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-  .sl-group { display: flex; flex-direction: column; gap: 5px; }
-  .sl-label { font-size: 10px; color: var(--faint); text-transform: uppercase; letter-spacing: 0.06em; }
-  .sl-row { display: flex; align-items: center; gap: 7px; }
-  .sl-row input[type=range] {
-    flex: 1; -webkit-appearance: none; height: 3px;
-    background: var(--bg3); border-radius: 2px; outline: none;
-  }
-  .sl-row input[type=range]::-webkit-slider-thumb {
-    -webkit-appearance: none; width: 16px; height: 16px;
-    border-radius: 50%; background: var(--green); cursor: pointer;
-  }
-  .sl-val { font-size: 12px; font-weight: 600; color: var(--text); min-width: 32px; text-align: right; }
+/* SHOPPING LIST */
+.shop-header{display:flex;justify-content:space-between;align-items:center;padding:0 16px 8px}
+.shop-total{font-size:14px;font-weight:600;color:var(--purple)}
+.shop-count{font-size:12px;color:var(--muted)}
+.shop-cat{padding:10px 16px 5px;font-size:11px;font-weight:600;color:var(--faint);text-transform:uppercase;letter-spacing:0.06em}
+.shop-item{display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:0.5px solid var(--border);cursor:pointer}
+.shop-item:last-child{border-bottom:none}
+.shop-check{width:22px;height:22px;border-radius:6px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all 0.15s}
+.shop-check.on{background:var(--green);border-color:var(--green)}
+.shop-check.on::after{content:'✓';color:#000;font-size:12px;font-weight:700}
+.shop-name{font-size:13px;font-weight:500;flex:1}
+.shop-detail{font-size:12px;color:var(--muted);text-align:right}
+.shop-item.ticked .shop-name{color:var(--faint);text-decoration:line-through}
+.suggest-btn{margin:0 16px 12px;padding:14px;border-radius:var(--radius);background:var(--bg2);border:1px solid var(--border2);display:flex;align-items:center;justify-content:space-between;cursor:pointer}
+.suggest-label{font-size:13px;font-weight:600}
+.suggest-sub{font-size:12px;color:var(--muted);margin-top:2px}
 
-  /* Stat row */
-  .stat-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; padding: 14px 16px; }
-  .stat-box { background: var(--bg3); border-radius: var(--radius-sm); padding: 11px 12px; }
-  .stat-val { font-size: 20px; font-weight: 700; }
-  .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
-  .stat-val.green { color: var(--green); }
-  .stat-val.red { color: var(--red); }
-  .stat-val.amber { color: var(--amber); }
+/* RULES */
+.rule-card{margin:0 16px 10px;background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--radius);overflow:hidden}
+.rule-row{display:flex;gap:13px;align-items:flex-start;padding:13px 15px;border-bottom:0.5px solid var(--border)}
+.rule-row:last-child{border-bottom:none}
+.rule-num{width:22px;height:22px;border-radius:50%;background:var(--green-bg);color:var(--green);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;border:1px solid var(--green-border)}
+.rule-title{font-size:13px;font-weight:600;margin-bottom:3px}
+.rule-sub{font-size:12px;color:var(--muted);line-height:1.5}
+.excuse-row{padding:13px 15px;border-bottom:0.5px solid var(--border)}
+.excuse-row:last-child{border-bottom:none}
+.excuse-q{font-size:13px;font-weight:600;color:var(--amber);margin-bottom:4px}
+.excuse-a{font-size:12px;color:var(--muted);line-height:1.55}
 
-  /* Streak tracker */
-  .streak-section { padding: 0 16px 12px; }
-  .week-label { font-size: 11px; color: var(--faint); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; margin: 14px 0 7px; }
-  .week-grid { display: grid; grid-template-columns: repeat(7,1fr); gap: 5px; }
-  .s-cell {
-    aspect-ratio: 1; border-radius: 8px; display: flex; flex-direction: column;
-    align-items: center; justify-content: center; cursor: pointer;
-    background: var(--bg3); border: 0.5px solid var(--border);
-    font-size: 9px; font-weight: 600; color: var(--faint);
-    transition: all 0.12s; gap: 2px; user-select: none;
-  }
-  .s-cell .day-letter { font-size: 9px; }
-  .s-cell .state-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--faint); }
-  .s-cell.done { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
-  .s-cell.done .state-dot { background: var(--green); }
-  .s-cell.skip { background: var(--red-bg); border-color: rgba(255,107,107,0.3); color: var(--red); }
-  .s-cell.skip .state-dot { background: var(--red); }
-  .s-cell.rest { background: var(--bg3); color: var(--faint); }
-
-  /* Alert */
-  .alert-box {
-    margin: 0 16px 12px; padding: 13px 15px; border-radius: var(--radius);
-    background: var(--red-bg); border: 1px solid rgba(255,107,107,0.3);
-    font-size: 13px; color: var(--red); line-height: 1.5; display: none;
-  }
-  .alert-box strong { display: block; font-size: 14px; margin-bottom: 3px; }
-
-  /* Mode switcher */
-  .mode-strip { display: flex; gap: 8px; padding: 14px 16px; }
-  .mode-btn {
-    flex: 1; padding: 10px 6px; border-radius: var(--radius-sm); text-align: center;
-    font-size: 12px; font-weight: 600; cursor: pointer; border: 1px solid var(--border);
-    background: var(--bg3); color: var(--muted); transition: all 0.15s;
-  }
-  .mode-btn.on.modeA { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
-  .mode-btn.on.modeB { background: var(--amber-bg); border-color: rgba(245,166,35,0.3); color: var(--amber); }
-  .mode-btn.on.modeC { background: var(--red-bg); border-color: rgba(255,107,107,0.3); color: var(--red); }
-  .mode-desc { margin: 0 16px 12px; padding: 12px 14px; border-radius: var(--radius-sm); background: var(--bg3); font-size: 12px; color: var(--muted); line-height: 1.6; }
-  .mode-desc strong { color: var(--text); display: block; margin-bottom: 3px; }
-
-  /* Volume bar */
-  .vol-bar {
-    margin: 0 16px 12px; padding: 13px 15px; background: var(--bg3);
-    border-radius: var(--radius-sm); display: flex; justify-content: space-between;
-  }
-  .vol-item { text-align: center; }
-  .vol-val { font-size: 17px; font-weight: 700; color: var(--green); }
-  .vol-lbl { font-size: 10px; color: var(--faint); margin-top: 2px; }
-
-  /* Reset / export */
-  .btn-row { display: flex; gap: 10px; padding: 0 16px 16px; }
-  .btn {
-    flex: 1; padding: 13px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600;
-    cursor: pointer; border: 1px solid var(--border2); background: var(--bg2); color: var(--muted);
-    text-align: center; transition: all 0.12s;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn.green { background: var(--green-bg); border-color: var(--green-border); color: var(--green); }
-
-  /* Import/export textarea */
-  .import-area {
-    margin: 0 16px 12px; padding: 12px; background: var(--bg3);
-    border-radius: var(--radius-sm); border: 1px solid var(--border2);
-    color: var(--text); font-size: 12px; font-family: monospace;
-    width: calc(100% - 32px); resize: none; display: none;
-  }
-
-  /* Section label */
-  .sec-label { padding: 18px 16px 8px; font-size: 11px; font-weight: 600; color: var(--faint); text-transform: uppercase; letter-spacing: 0.07em; }
-  .sec-label:first-of-type { padding-top: 0; }
-
-  /* Consistency page */
-  .rule-card { margin: 0 16px 10px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .rule-row { display: flex; gap: 13px; align-items: flex-start; padding: 13px 15px; border-bottom: 0.5px solid var(--border); }
-  .rule-row:last-child { border-bottom: none; }
-  .rule-num { width: 22px; height: 22px; border-radius: 50%; background: var(--green-bg); color: var(--green); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; border: 1px solid var(--green-border); }
-  .rule-title { font-size: 13px; font-weight: 600; margin-bottom: 3px; }
-  .rule-sub { font-size: 12px; color: var(--muted); line-height: 1.5; }
-
-  .excuse-card { margin: 0 16px 10px; background: var(--bg2); border: 0.5px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-  .excuse-row { padding: 13px 15px; border-bottom: 0.5px solid var(--border); }
-  .excuse-row:last-child { border-bottom: none; }
-  .excuse-q { font-size: 13px; font-weight: 600; color: var(--amber); margin-bottom: 5px; }
-  .excuse-a { font-size: 12px; color: var(--muted); line-height: 1.55; }
-
-  .tip-box { margin: 0 16px 12px; padding: 13px 15px; background: var(--bg3); border-radius: var(--radius-sm); font-size: 12px; color: var(--muted); line-height: 1.6; border-left: 2px solid var(--green); }
-  .tip-box strong { color: var(--text); }
+/* EXPORT */
+.export-area{margin:0 16px 10px;padding:12px;background:var(--bg3);border-radius:var(--radius-sm);border:1px solid var(--border2);color:var(--text);font-size:11px;font-family:monospace;width:calc(100% - 32px);resize:none;display:none}
+.storage-bar{margin:0 16px 12px;font-size:12px;color:var(--muted)}
 </style>
 </head>
 <body>
 <div id="app">
 <div id="screen">
 
-  <!-- WORKOUT PAGE -->
-  <div class="page on" id="pg-workout">
-    <div class="page-header">
-      <div class="page-title">Workout</div>
-      <div class="page-sub" id="mode-indicator">Mode A — full program</div>
-    </div>
-
-    <div class="mode-strip">
-      <div class="mode-btn on modeA" onclick="setMode('A')">Mode A<br><span style="font-size:10px;font-weight:400">Full</span></div>
-      <div class="mode-btn modeB" onclick="setMode('B')">Mode B<br><span style="font-size:10px;font-weight:400">Busy</span></div>
-      <div class="mode-btn modeC" onclick="setMode('C')">Mode C<br><span style="font-size:10px;font-weight:400">Emergency</span></div>
-    </div>
-    <div class="mode-desc" id="mode-desc">
-      <strong>Full program</strong>4 days/week. Progressive overload. Track everything.
-    </div>
-
-    <div class="day-tabs" id="day-tabs"></div>
-
-    <div style="height:12px"></div>
-    <div id="ex-list"></div>
-
-    <div class="vol-bar">
-      <div class="vol-item"><div class="vol-val" id="v-sets">0</div><div class="vol-lbl">sets</div></div>
-      <div class="vol-item"><div class="vol-val" id="v-reps">0</div><div class="vol-lbl">est. reps</div></div>
-      <div class="vol-item"><div class="vol-val" id="v-vol">0</div><div class="vol-lbl">volume kg</div></div>
-    </div>
-
-    <div class="btn-row">
-      <div class="btn" onclick="resetDay()">Reset day</div>
-      <div class="btn green" onclick="saveWorkout()">Save session</div>
-    </div>
+<!-- WORKOUT -->
+<div class="page on" id="pg-workout">
+  <div class="page-header">
+    <div class="page-title">Workout</div>
+    <div class="page-sub" id="mode-indicator">Mode A — full program</div>
   </div>
-
-  <!-- TRACKER PAGE -->
-  <div class="page" id="pg-tracker">
-    <div class="page-header">
-      <div class="page-title">Streak</div>
-      <div class="page-sub">Tap a day to log it</div>
-    </div>
-
-    <div class="stat-row">
-      <div class="stat-box"><div class="stat-val green" id="t-done">0</div><div class="stat-lbl">trained</div></div>
-      <div class="stat-box"><div class="stat-val amber" id="t-streak">0</div><div class="stat-lbl">best streak</div></div>
-      <div class="stat-box"><div class="stat-val red" id="t-skip">0</div><div class="stat-lbl">skipped</div></div>
-    </div>
-
-    <div class="alert-box" id="alert-box">
-      <strong>Two skips in a row.</strong>Do a Mode C session today — squats, bench, pull-ups, 25 min. That's it.
-    </div>
-
-    <div class="streak-section" id="streak-section"></div>
-
-    <div class="btn-row">
-      <div class="btn" onclick="resetTracker()">Reset</div>
-      <div class="btn" onclick="exportData()">Export backup</div>
-    </div>
-    <textarea class="import-area" id="export-area" rows="4" placeholder="Paste backup data here..."></textarea>
-    <div class="btn-row" id="import-btn-row" style="display:none">
-      <div class="btn green" onclick="importData()">Import this data</div>
-      <div class="btn" onclick="cancelImport()">Cancel</div>
-    </div>
+  <div class="mode-strip">
+    <div class="mode-btn on mA" onclick="setMode('A')">Mode A<br><span style="font-size:10px;font-weight:400">Full</span></div>
+    <div class="mode-btn mB" onclick="setMode('B')">Mode B<br><span style="font-size:10px;font-weight:400">Busy</span></div>
+    <div class="mode-btn mC" onclick="setMode('C')">Mode C<br><span style="font-size:10px;font-weight:400">Crisis</span></div>
   </div>
-
-  <!-- CONSISTENCY PAGE -->
-  <div class="page" id="pg-rules">
-    <div class="page-header">
-      <div class="page-title">Stay consistent</div>
-      <div class="page-sub">Read this when you want to skip</div>
-    </div>
-
-    <div class="sec-label">The rules</div>
-    <div class="rule-card">
-      <div class="rule-row"><div class="rule-num">1</div><div><div class="rule-title">Never miss twice</div><div class="rule-sub">One miss is life. Two misses is the start of a spiral. This is the only rule that matters.</div></div></div>
-      <div class="rule-row"><div class="rule-num">2</div><div><div class="rule-title">Downgrade, don't skip</div><div class="rule-sub">Busy week? Switch to Mode B or C. You never fully stop — you just dial down.</div></div></div>
-      <div class="rule-row"><div class="rule-num">3</div><div><div class="rule-title">Schedule it like a tute</div><div class="rule-sub">Put sessions in your calendar. A specific time, a specific day. Treat missing it like missing class.</div></div></div>
-      <div class="rule-row"><div class="rule-num">4</div><div><div class="rule-title">Identity over motivation</div><div class="rule-sub">You go because you're someone who trains — not because you feel like it today.</div></div></div>
-      <div class="rule-row"><div class="rule-num">5</div><div><div class="rule-title">Remove friction</div><div class="rule-sub">Pack your bag the night before. The harder it is to start, the more likely you'll bail.</div></div></div>
-    </div>
-
-    <div class="sec-label">Your known excuses</div>
-    <div class="excuse-card">
-      <div class="excuse-row"><div class="excuse-q">"I have exams / assignments"</div><div class="excuse-a">Switch to Mode B immediately. 2 sessions, 45 min each. A gym session improves exam performance. You have time.</div></div>
-      <div class="excuse-row"><div class="excuse-q">"Work picked up / I'm tired"</div><div class="excuse-a">Mode B or C. Go anyway. Give yourself permission to leave after warm-up if you still feel bad — you almost never will.</div></div>
-      <div class="excuse-row"><div class="excuse-q">"I've already missed a few days"</div><div class="excuse-a">This is the spiral talking. A 25-min Mode C session resets everything. Waiting until Monday is how a few days becomes 3 months.</div></div>
-      <div class="excuse-row"><div class="excuse-q">"My shoulder is sore"</div><div class="excuse-a">You study physio. You know the difference between acute pain and fatigue. Soreness is not a reason to skip — modify. Genuine injury → lower body only.</div></div>
-    </div>
-
-    <div class="tip-box" style="margin-bottom:20px">
-      <strong>The reframe:</strong> Your goal is not to have perfect training weeks. Your goal is to never have two bad weeks in a row. One bad week is life. Two bad weeks is a habit forming.
-    </div>
+  <div class="mode-desc" id="mode-desc"><strong>Full program</strong>4 days/week. Progressive overload. Track everything.</div>
+  <div class="day-tabs" id="day-tabs"></div>
+  <div style="height:10px"></div>
+  <div id="ex-list"></div>
+  <div class="vol-bar">
+    <div class="vol-item"><div class="vol-val" id="v-sets">0</div><div class="vol-lbl">sets</div></div>
+    <div class="vol-item"><div class="vol-val" id="v-reps">0</div><div class="vol-lbl">reps</div></div>
+    <div class="vol-item"><div class="vol-val" id="v-vol">0</div><div class="vol-lbl">vol kg</div></div>
   </div>
-
+  <div class="notes-wrap">
+    <textarea class="notes-input" id="session-notes" rows="2" placeholder="Session notes… e.g. shoulder felt good, PR on squat" oninput="saveNotes()"></textarea>
+  </div>
+  <div style="height:10px"></div>
+  <div class="btn-row">
+    <div class="btn" onclick="resetDay()">Reset</div>
+    <div class="btn green" id="log-session-btn" onclick="logSession()">Log session ✓</div>
+  </div>
 </div>
 
-<!-- Bottom nav -->
+<!-- PROGRESS -->
+<div class="page" id="pg-progress">
+  <div class="page-header">
+    <div class="page-title">Progress</div>
+    <div class="page-sub">Training calendar</div>
+  </div>
+  <div class="alert-box" id="alert-box"><strong>Two skips in a row.</strong>Mode C today — squat, bench, pull-ups. 25 min. Go.</div>
+  <div class="streak-stats">
+    <div class="sstat"><div class="sstat-val" style="color:var(--green)" id="st-done">0</div><div class="sstat-lbl">trained</div></div>
+    <div class="sstat"><div class="sstat-val" style="color:var(--amber)" id="st-streak">0</div><div class="sstat-lbl">best streak</div></div>
+    <div class="sstat"><div class="sstat-val" style="color:var(--red)" id="st-skip">0</div><div class="sstat-lbl">skipped</div></div>
+  </div>
+  <div class="cal-nav">
+    <div class="cal-arrow" onclick="changeMonth(-1)">‹</div>
+    <div class="cal-month" id="cal-month-label"></div>
+    <div class="cal-arrow" onclick="changeMonth(1)">›</div>
+  </div>
+  <div class="cal-dow" id="cal-dow"></div>
+  <div class="cal-grid" id="cal-grid"></div>
+</div>
+
+<!-- BODY -->
+<div class="page" id="pg-body">
+  <div class="page-header">
+    <div class="page-title">Body</div>
+    <div class="page-sub">Weight toward 65 kg</div>
+  </div>
+  <div class="sec-label">Bodyweight</div>
+  <div class="chart-wrap">
+    <div class="chart-title">Weekly weight (kg)</div>
+    <canvas id="weightChart" height="150"></canvas>
+  </div>
+  <div class="weight-input-row">
+    <input class="num-input" id="weight-input" type="number" step="0.1" min="40" max="120" placeholder="Log today's weight (kg)">
+    <div class="btn green" style="flex:0 0 auto;padding:12px 18px" onclick="logWeight()">Log</div>
+  </div>
+  <div class="btn-row">
+    <div class="btn red" onclick="clearWeightLog()">Clear weight log</div>
+  </div>
+</div>
+
+<!-- RECIPES -->
+<div class="page" id="pg-recipes">
+  <div class="page-header">
+    <div class="page-title">Recipes</div>
+    <div class="page-sub">Woolies Paddington · High protein · Budget</div>
+  </div>
+  <div class="suggest-btn" onclick="suggestMeals()">
+    <div><div class="suggest-label">🎲 What should I eat today?</div><div class="suggest-sub">Random meals hitting ~3,050 kcal</div></div>
+    <div style="color:var(--faint);font-size:18px">›</div>
+  </div>
+  <div class="filter-bar" id="filter-bar"></div>
+  <div style="height:12px"></div>
+  <div id="recipe-list"></div>
+  <div class="sec-label">Shopping list</div>
+  <div class="shop-header">
+    <div><div class="shop-total" id="shop-total">$0.00 est.</div><div class="shop-count" id="shop-count">0 items</div></div>
+    <div class="btn red" style="flex:0 0 auto;padding:7px 14px;font-size:12px" onclick="clearShop()">Clear</div>
+  </div>
+  <div class="card" id="shop-container">
+    <div style="padding:20px;text-align:center;color:var(--faint);font-size:13px">Open a recipe → Add to list</div>
+  </div>
+</div>
+
+<!-- RULES -->
+<div class="page" id="pg-rules">
+  <div class="page-header">
+    <div class="page-title">Stay consistent</div>
+    <div class="page-sub">Read this when you want to skip</div>
+  </div>
+  <div class="sec-label">The rules</div>
+  <div class="rule-card">
+    <div class="rule-row"><div class="rule-num">1</div><div><div class="rule-title">Never miss twice</div><div class="rule-sub">One miss is life. Two misses is the start of a spiral. This is the only rule that matters.</div></div></div>
+    <div class="rule-row"><div class="rule-num">2</div><div><div class="rule-title">Downgrade, don't skip</div><div class="rule-sub">Busy week? Mode B or C. You never fully stop — you just dial down.</div></div></div>
+    <div class="rule-row"><div class="rule-num">3</div><div><div class="rule-title">Schedule it like a tute</div><div class="rule-sub">Put sessions in your calendar with a specific time. Treat missing it like missing class.</div></div></div>
+    <div class="rule-row"><div class="rule-num">4</div><div><div class="rule-title">Identity over motivation</div><div class="rule-sub">You go because you're someone who trains — not because you feel like it today.</div></div></div>
+    <div class="rule-row"><div class="rule-num">5</div><div><div class="rule-title">Remove friction</div><div class="rule-sub">Pack your bag the night before. The harder it is to start, the more likely you bail.</div></div></div>
+  </div>
+  <div class="sec-label">Your known excuses</div>
+  <div class="rule-card">
+    <div class="excuse-row"><div class="excuse-q">"I have exams / assignments"</div><div class="excuse-a">Switch to Mode B. 2 sessions, 45 min. The gym improves exam performance. You have the time.</div></div>
+    <div class="excuse-row"><div class="excuse-q">"Work picked up / I'm tired"</div><div class="excuse-a">Mode B or C. Go anyway. Give yourself permission to leave after warm-up — you almost never will.</div></div>
+    <div class="excuse-row"><div class="excuse-q">"I've already missed a few days"</div><div class="excuse-a">This is the spiral talking. A 25-min Mode C session resets everything. Waiting until Monday is how a few days becomes 3 months.</div></div>
+    <div class="excuse-row"><div class="excuse-q">"My shoulder is sore"</div><div class="excuse-a">You study physio. Soreness is not a reason to skip — modify. Genuine injury → lower body only.</div></div>
+  </div>
+  <div class="tip-box" style="margin-bottom:4px"><strong>The reframe:</strong> Your goal is not perfect training weeks. Your goal is to never have two bad weeks in a row.</div>
+  <div class="sec-label">Backup & restore</div>
+  <div class="btn-row">
+    <div class="btn" onclick="exportData()">Export backup</div>
+    <div class="btn green" onclick="showImport()">Import backup</div>
+  </div>
+  <textarea class="export-area" id="export-area" rows="5"></textarea>
+  <div class="btn-row" id="import-row" style="display:none">
+    <div class="btn green" onclick="importData()">Confirm import</div>
+    <div class="btn" onclick="cancelImport()">Cancel</div>
+  </div>
+  <div class="storage-bar" id="storage-bar"></div>
+</div>
+
+</div>
 <nav id="navbar">
   <button class="nav-btn on" onclick="showPage('workout',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 10h2.5M3 14h2.5M18.5 10H21M18.5 14H21"/></svg>
-    Workout
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6.5 6.5h11M6.5 17.5h11M3 10h2.5M3 14h2.5M18.5 10H21M18.5 14H21"/></svg>Workout
   </button>
-  <button class="nav-btn" onclick="showPage('tracker',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/><path d="M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>
-    Streak
+  <button class="nav-btn" onclick="showPage('progress',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="3" y="4" width="18" height="18" rx="3"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Progress
+  </button>
+  <button class="nav-btn" onclick="showPage('body',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a4 4 0 1 0 0 8 4 4 0 0 0 0-8zM6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/></svg>Body
+  </button>
+  <button class="nav-btn" onclick="showPage('recipes',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z"/><path d="M8 12h8M12 8v8"/></svg>Recipes
   </button>
   <button class="nav-btn" onclick="showPage('rules',this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-    Rules
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>Rules
   </button>
 </nav>
 </div>
 
 <script>
-const STORAGE_KEY = 'gymapp_v1';
-
-const DAYS_DATA = {
-  u1: {
-    label: 'Upper 1', mode: 'A',
-    exercises: [
-      { name: 'Overhead DB press', note: 'Seated. Elbows in front of body.', badge: 'shoulder', sets: 3, reps: 10, kg: 8 },
-      { name: 'Flat DB bench press', note: '2–3 sec eccentric.', sets: 3, reps: 10, kg: 14 },
-      { name: 'Chest fly machine', note: 'Avoid over-stretching at end range.', sets: 3, reps: 13, kg: 30 },
-      { name: 'Pull-ups', note: 'Scapular depression first.', sets: 3, reps: 6, kg: 0, bw: true },
-      { name: 'Unilateral cable row', note: 'Finish with scapular retraction.', sets: 3, reps: 11, kg: 18 },
-      { name: 'Cable tricep pushdown', note: 'Elbows tucked throughout.', sets: 3, reps: 13, kg: 15 },
-      { name: 'DB curl (standing)', note: 'Supinate at top. No swinging.', sets: 3, reps: 11, kg: 10 },
-    ]
-  },
-  u2: {
-    label: 'Upper 2', mode: 'A',
-    exercises: [
-      { name: 'Incline DB press', note: '30–45°. Neutral wrist.', badge: 'shoulder', sets: 3, reps: 10, kg: 12 },
-      { name: 'Chest fly machine', note: 'Sub for dips while shoulder heals.', sets: 3, reps: 13, kg: 28 },
-      { name: 'Pull-ups / seated row', note: 'Alternate week to week.', sets: 3, reps: 7, kg: 0, bw: true },
-      { name: 'Chest-supported trap row', note: 'Think squeeze not load.', sets: 3, reps: 13, kg: 20 },
-      { name: 'Unilateral cable lateral raise', note: 'Scapular plane. Don\'t shrug.', badge: 'shoulder', sets: 3, reps: 13, kg: 5 },
-      { name: 'Rear delt fly', note: 'Lead with elbow not wrist.', sets: 3, reps: 13, kg: 8 },
-      { name: 'Overhead cable tricep ext.', note: 'Long head. Light if shoulder sensitive.', sets: 3, reps: 11, kg: 12 },
-      { name: 'Seated preacher curl', note: 'Full range, slow eccentric.', sets: 3, reps: 11, kg: 10 },
-    ]
-  },
-  lo1: {
-    label: 'Lower 1', mode: 'A',
-    exercises: [
-      { name: 'Squat', note: 'At or below parallel. Watch knee valgus.', sets: 4, reps: 6, kg: 40 },
-      { name: 'Romanian deadlift', note: 'Hinge at hip, feel hamstring load.', sets: 3, reps: 9, kg: 40 },
-      { name: 'Leg extension machine', note: 'Full extension, slow lowering.', badge: 'new', sets: 3, reps: 13, kg: 30 },
-      { name: 'Seated leg curl', note: 'Long-length hamstring loading.', badge: 'new', sets: 3, reps: 11, kg: 25 },
-      { name: 'Standing calf raise', note: 'Straight knee. Pause at stretch.', sets: 3, reps: 17, kg: 20 },
-      { name: 'Seated calf raise (soleus)', note: 'Knee bent. Underworked muscle.', badge: 'new', sets: 3, reps: 17, kg: 20 },
-      { name: 'Decline sit-up', note: '', sets: 3, reps: 13, kg: 0, bw: true },
-      { name: 'Hyperextension bench', note: 'Spine neutral at top. 20 kg plate.', sets: 3, reps: 10, kg: 20 },
-    ]
-  },
-  lo2: {
-    label: 'Lower 2', mode: 'A',
-    exercises: [
-      { name: 'Squat', note: 'Second lower session. Can vary: pause squats, tempo.', sets: 4, reps: 6, kg: 40 },
-      { name: 'Romanian deadlift', note: 'Push for a touch more than Lower 1.', sets: 3, reps: 9, kg: 40 },
-      { name: 'Leg extension machine', note: '', sets: 3, reps: 13, kg: 30 },
-      { name: 'Seated leg curl', note: '', sets: 3, reps: 11, kg: 25 },
-      { name: 'Standing calf raise', note: '', sets: 3, reps: 17, kg: 20 },
-      { name: 'Seated calf raise (soleus)', note: '', sets: 3, reps: 17, kg: 20 },
-      { name: 'Decline sit-up', note: '', sets: 3, reps: 13, kg: 0, bw: true },
-      { name: 'Hyperextension bench', note: '', sets: 3, reps: 10, kg: 20 },
-    ]
-  },
-  mb: {
-    label: 'Mode B Upper', mode: 'B',
-    exercises: [
-      { name: 'DB bench press', note: 'Primary push.', sets: 3, reps: 10, kg: 14 },
-      { name: 'Pull-ups', note: '', sets: 3, reps: 6, kg: 0, bw: true },
-      { name: 'Overhead DB press', note: 'Go light.', badge: 'shoulder', sets: 2, reps: 10, kg: 8 },
-      { name: 'Unilateral cable row', note: '', sets: 3, reps: 10, kg: 18 },
-    ]
-  },
-  mbl: {
-    label: 'Mode B Lower', mode: 'B',
-    exercises: [
-      { name: 'Squat', note: '', sets: 3, reps: 8, kg: 40 },
-      { name: 'Romanian deadlift', note: '', sets: 3, reps: 8, kg: 40 },
-      { name: 'Standing calf raise', note: '', sets: 2, reps: 15, kg: 20 },
-    ]
-  },
-  mc: {
-    label: 'Mode C', mode: 'C',
-    exercises: [
-      { name: 'Squat', note: '25 min total. Just do this.', sets: 3, reps: 8, kg: 40 },
-      { name: 'DB bench press', note: '', sets: 3, reps: 8, kg: 14 },
-      { name: 'Pull-ups', note: '', sets: 3, reps: 0, kg: 0, bw: true },
-    ]
-  }
-};
-
-const MODE_DAYS = {
-  A: ['u1','u2','lo1','lo2'],
-  B: ['mb','mbl'],
-  C: ['mc']
-};
-
-const MODE_INFO = {
-  A: { label: 'Mode A — full program', desc: '<strong>Full program</strong>4 days/week. Progressive overload. Track everything.' },
-  B: { label: 'Mode B — maintenance', desc: '<strong>Busy / exam mode</strong>2 sessions, 45 min each. Goal is to maintain — not progress. No guilt.' },
-  C: { label: 'Mode C — emergency', desc: '<strong>Crisis session</strong>1 session, 25–30 min, full body. Exists purely to keep the habit alive. Squat, bench, pull-ups. Done.' }
-};
-
-let state = loadState();
-let currentMode = state.currentMode || 'A';
-let currentDay = state.currentDay || 'u1';
-let exState = state.exState || {};
-let trackerData = state.trackerData || Array(28).fill('rest');
-
-function loadState() {
-  try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch(e) { return {}; }
+// ─── STORAGE ───────────────────────────────────────────────────────────────
+const SK='gym_v3';
+function load(){try{return JSON.parse(localStorage.getItem(SK))||{};}catch(e){return {};}}
+function save(){
+  const d={currentMode,currentDay,exState,calData,weightLog,shopItems,shopChecked,favs,activeFilter,openRecipes,sessionNotes};
+  try{localStorage.setItem(SK,JSON.stringify(d));}catch(e){alert('Storage full — export a backup.');}
+  updateStorageBar();
 }
-function saveState() {
-  const s = { currentMode, currentDay, exState, trackerData };
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(s));
+function updateStorageBar(){
+  const el=document.getElementById('storage-bar');if(!el)return;
+  try{const bytes=new Blob([localStorage.getItem(SK)||'']).size;el.textContent=`Storage: ${(bytes/1024).toFixed(1)} KB used`;}catch(e){}
 }
 
-function showPage(name, btn) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('on'));
-  document.getElementById('pg-' + name).classList.add('on');
+// ─── EXERCISE DATA ─────────────────────────────────────────────────────────
+const DAYS_DATA={
+  u1:{label:'Upper 1',mode:'A',exercises:[
+    {name:'Overhead DB press',note:'Seated. Elbows in front of body.',tag:'shoulder',sets:3,reps:10,kg:8},
+    {name:'Flat DB bench press',note:'2–3 sec eccentric.',sets:3,reps:10,kg:14},
+    {name:'Chest fly machine',note:'Avoid over-stretching at end range.',sets:3,reps:13,kg:30},
+    {name:'Pull-ups',note:'Scapular depression before pulling.',sets:3,reps:7,kg:0,bw:true},
+    {name:'Unilateral cable row',note:'Finish with scapular retraction.',sets:3,reps:11,kg:18},
+    {name:'Cable tricep pushdown',note:'Elbows tucked throughout.',sets:3,reps:13,kg:15},
+    {name:'DB curl (standing)',note:'Supinate at top. No swinging.',sets:3,reps:11,kg:10},
+  ]},
+  u2:{label:'Upper 2',mode:'A',exercises:[
+    {name:'Incline DB press',note:'30–45°. Neutral wrist.',tag:'shoulder',sets:3,reps:10,kg:12},
+    {name:'Chest fly machine',note:'Sub for dips while shoulder heals.',sets:3,reps:13,kg:28},
+    {name:'Pull-ups / seated row',note:'Alternate week to week.',sets:3,reps:7,kg:0,bw:true},
+    {name:'Chest-supported trap row',note:'Think squeeze not load.',sets:3,reps:13,kg:20},
+    {name:'Unilateral cable lateral raise',note:"Scapular plane. Don't shrug.",tag:'shoulder',sets:3,reps:13,kg:5},
+    {name:'Rear delt fly',note:'Lead with elbow not wrist.',sets:3,reps:13,kg:8},
+    {name:'Overhead cable tricep ext.',note:'Long head. Light if shoulder sensitive.',sets:3,reps:11,kg:12},
+    {name:'Seated preacher curl',note:'Full range, slow eccentric.',sets:3,reps:11,kg:10},
+  ]},
+  lo:{label:'Lower',mode:'A',exercises:[
+    {name:'Squat',note:'At or below parallel. Watch knee valgus.',sets:4,reps:6,kg:40},
+    {name:'Romanian deadlift',note:'Hinge at hip, feel hamstring load.',sets:3,reps:9,kg:40},
+    {name:'Leg extension machine',note:'Full extension, slow lowering.',tag:'new',sets:3,reps:13,kg:30},
+    {name:'Seated leg curl',note:'Long-length hamstring loading.',tag:'new',sets:3,reps:11,kg:25},
+    {name:'Standing calf raise',note:'Straight knee. Pause at stretch.',sets:3,reps:17,kg:20},
+    {name:'Seated calf raise (soleus)',note:'Knee bent. Key for ankle stability.',tag:'new',sets:3,reps:17,kg:20},
+    {name:'Decline sit-up',note:'',sets:3,reps:13,kg:0,bw:true},
+    {name:'Hyperextension bench',note:'Spine neutral at top. 20 kg plate.',sets:3,reps:10,kg:20},
+  ]},
+  mb:{label:'Mode B Upper',mode:'B',exercises:[
+    {name:'DB bench press',note:'',sets:3,reps:10,kg:14},
+    {name:'Pull-ups',note:'',sets:3,reps:7,kg:0,bw:true},
+    {name:'Overhead DB press',note:'Go light.',tag:'shoulder',sets:2,reps:10,kg:8},
+    {name:'Unilateral cable row',note:'',sets:3,reps:10,kg:18},
+  ]},
+  mbl:{label:'Mode B Lower',mode:'B',exercises:[
+    {name:'Squat',note:'',sets:3,reps:8,kg:40},
+    {name:'Romanian deadlift',note:'',sets:3,reps:8,kg:40},
+    {name:'Standing calf raise',note:'',sets:2,reps:15,kg:20},
+  ]},
+  mc:{label:'Mode C',mode:'C',exercises:[
+    {name:'Squat',note:'25 min total.',sets:3,reps:8,kg:40},
+    {name:'DB bench press',note:'',sets:3,reps:8,kg:14},
+    {name:'Pull-ups',note:'',sets:3,reps:0,kg:0,bw:true},
+  ]}
+};
+const MODE_DAYS={A:['u1','u2','lo'],B:['mb','mbl'],C:['mc']};
+const MODE_INFO={
+  A:{label:'Mode A — full program',desc:'<strong>Full program</strong>4 days/week. Progressive overload. Track everything.'},
+  B:{label:'Mode B — maintenance',desc:'<strong>Busy / exam mode</strong>2 sessions, 45 min. Goal is to maintain — no pressure.'},
+  C:{label:'Mode C — emergency',desc:'<strong>Crisis session</strong>1 session, 25 min. Exists purely to keep the habit alive.'}
+};
+
+// ─── RECIPES DATA ──────────────────────────────────────────────────────────
+const RECIPES=[
+  // BREAKFAST
+  {id:'b1',name:'Oats, eggs & banana',time:'10 min',cals:650,protein:38,carbs:68,fat:18,diff:'Very easy',cost:3.20,tags:['breakfast','bulk'],
+   ingredients:[
+    {n:'Woolworths rolled oats 1kg',q:'100g',p:0.50},{n:'Full cream milk 2L (Woolworths)',q:'250ml',p:0.55},
+    {n:'Free range eggs 12pk',q:'2 eggs',p:0.70},{n:'Banana',q:'1 medium',p:0.35},{n:'Allowrie peanut butter 375g',q:'1 tbsp',p:0.40},{n:'Capilano honey 500g',q:'1 tsp',p:0.20}],
+   steps:['Cook oats in milk 3 min microwave or stove, stir halfway.','Scramble or fry eggs on the side.','Top oats with sliced banana, peanut butter, honey.']},
+  {id:'b2',name:'Protein pancakes',time:'15 min',cals:620,protein:42,carbs:55,fat:16,diff:'Easy',cost:2.80,tags:['breakfast','bulk'],
+   ingredients:[
+    {n:'Woolworths rolled oats 1kg',q:'80g',p:0.40},{n:'Free range eggs 12pk',q:'2 eggs',p:0.70},
+    {n:'Full cream milk 2L',q:'100ml',p:0.22},{n:'Banana',q:'1 large',p:0.35},{n:'Baking powder',q:'½ tsp',p:0.05},{n:'Olive oil spray',q:'for pan',p:0.10}],
+   steps:['Blend oats, eggs, milk, banana, baking powder until smooth.','Heat pan with oil spray on medium.','Pour small rounds, cook 2 min each side.','Top with honey or yoghurt.']},
+  {id:'b3',name:'Greek yoghurt parfait',time:'5 min',cals:430,protein:32,carbs:45,fat:10,diff:'Very easy',cost:2.40,tags:['breakfast','snack'],
+   ingredients:[
+    {n:'Woolworths Greek yoghurt 1kg',q:'200g',p:1.00},{n:'Woolworths rolled oats 1kg',q:'40g raw',p:0.20},
+    {n:'Banana',q:'1 medium',p:0.35},{n:'Capilano honey 500g',q:'1 tsp',p:0.20},{n:'Mixed nuts Woolworths 375g',q:'20g',p:0.65}],
+   steps:['Layer yoghurt in bowl.','Top with raw oats, sliced banana, nuts.','Drizzle honey. Eat immediately or prep night before.']},
+  {id:'b4',name:'Scrambled egg wrap',time:'10 min',cals:580,protein:36,carbs:48,fat:20,diff:'Very easy',cost:2.60,tags:['breakfast','lunch'],
+   ingredients:[
+    {n:'Free range eggs 12pk',q:'3 eggs',p:1.05},{n:'Old El Paso flour tortillas 8pk',q:'2 tortillas',p:0.75},
+    {n:'Woolworths shredded cheese 250g',q:'30g',p:0.60},{n:'Full cream milk 2L',q:'2 tbsp',p:0.10},{n:'Salt & pepper',q:'to taste',p:0.05}],
+   steps:['Whisk eggs with milk, salt, pepper.','Scramble in pan on medium-low, remove while still soft.','Warm tortillas 30 sec in microwave.','Fill tortillas with eggs and cheese.']},
+  {id:'b5',name:'Weetbix protein bowl',time:'5 min',cals:550,protein:30,carbs:72,fat:8,diff:'Very easy',cost:1.80,tags:['breakfast'],
+   ingredients:[
+    {n:'Sanitarium Weetbix 750g',q:'4 biscuits',p:0.60},{n:'Full cream milk 2L',q:'300ml',p:0.65},
+    {n:'Banana',q:'1 medium',p:0.35},{n:'Capilano honey 500g',q:'1 tsp',p:0.20}],
+   steps:['Place Weetbix in bowl, pour milk over.','Slice banana on top.','Drizzle honey. Let sit 1 min to soften if preferred.']},
+  {id:'b6',name:'High calorie smoothie',time:'5 min',cals:700,protein:28,carbs:80,fat:22,diff:'Very easy',cost:3.50,tags:['breakfast','bulk','pre-workout'],
+   ingredients:[
+    {n:'Full cream milk 2L',q:'300ml',p:0.65},{n:'Banana',q:'2 medium',p:0.70},
+    {n:'Allowrie peanut butter 375g',q:'2 tbsp',p:0.80},{n:'Woolworths rolled oats 1kg',q:'40g',p:0.20},
+    {n:'Capilano honey 500g',q:'1 tbsp',p:0.40},{n:'Woolworths Greek yoghurt 1kg',q:'100g',p:0.50}],
+   steps:['Blend all ingredients until smooth.','Drink immediately or refrigerate up to 12 hrs.','Add ice if preferred.']},
+  // LUNCH
+  {id:'l1',name:'Chicken & rice bowl',time:'30 min',cals:720,protein:55,carbs:75,fat:14,diff:'Easy',cost:4.20,tags:['lunch','dinner','bulk','meal prep'],
+   ingredients:[
+    {n:'Woolworths chicken breast 1kg',q:'180g',p:2.70},{n:'Woolworths white rice 2kg',q:'150g dry',p:0.45},
+    {n:'Woolworths frozen mixed veg 1kg',q:'150g',p:0.55},{n:'Kikkoman soy sauce 250ml',q:'2 tbsp',p:0.40},{n:'Garlic powder',q:'½ tsp',p:0.05}],
+   steps:['Cook rice (1:1.5 water, 18 min covered).','Season chicken with garlic powder and salt.','Cook chicken in pan 5–6 min each side.','Microwave frozen veg 3 min.','Slice chicken, build bowl, drizzle soy sauce.']},
+  {id:'l2',name:'Tuna rice bowl',time:'10 min',cals:580,protein:45,carbs:65,fat:8,diff:'Very easy',cost:2.80,tags:['lunch','meal prep'],
+   ingredients:[
+    {n:'Woolworths tuna in brine 425g',q:'1 can (95g drained)',p:1.50},{n:'Woolworths white rice 2kg',q:'150g dry',p:0.45},
+    {n:'Kikkoman soy sauce 250ml',q:'1 tbsp',p:0.20},{n:'Woolworths frozen mixed veg 1kg',q:'100g',p:0.37},{n:'Sesame oil (optional)',q:'½ tsp',p:0.10}],
+   steps:['Cook or reheat rice.','Microwave veg 3 min.','Drain tuna, build bowl.','Drizzle soy sauce and sesame oil.']},
+  {id:'l3',name:'Chicken wrap',time:'10 min',cals:620,protein:48,carbs:52,fat:14,diff:'Very easy',cost:3.40,tags:['lunch'],
+   ingredients:[
+    {n:'Woolworths chicken breast 1kg',q:'150g (pre-cooked)',p:2.25},{n:'Old El Paso flour tortillas 8pk',q:'2 tortillas',p:0.75},
+    {n:'Woolworths shredded cheese 250g',q:'30g',p:0.60},{n:'Woolworths Greek yoghurt 1kg',q:'2 tbsp (as sauce)',p:0.25},{n:'Spinach leaves',q:'handful',p:0.30}],
+   steps:['Slice pre-cooked chicken.','Layer tortilla with chicken, cheese, spinach.','Dollop Greek yoghurt as sauce.','Wrap tightly and eat.']},
+  {id:'l4',name:'Pasta salad',time:'20 min',cals:650,protein:35,carbs:75,fat:16,diff:'Easy',cost:3.00,tags:['lunch','meal prep'],
+   ingredients:[
+    {n:'Woolworths pasta penne 500g',q:'120g dry',p:0.55},{n:'Woolworths tuna in brine 425g',q:'1 can',p:1.50},
+    {n:'Woolworths frozen mixed veg 1kg',q:'100g (thawed)',p:0.37},{n:'Woolworths Greek yoghurt 1kg',q:'3 tbsp',p:0.38},{n:'Woolworths shredded cheese 250g',q:'30g',p:0.60}],
+   steps:['Cook pasta, drain, cool under cold water.','Mix yoghurt with a pinch of salt as dressing.','Combine pasta, drained tuna, thawed veg, cheese.','Toss with dressing. Eat cold. Keeps 3 days.']},
+  {id:'l5',name:'Baked potato with tuna & cottage cheese',time:'50 min',cals:590,protein:44,carbs:62,fat:10,diff:'Easy',cost:2.90,tags:['lunch','dinner'],
+   ingredients:[
+    {n:'Large potato',q:'1 large (300g)',p:0.80},{n:'Woolworths tuna in brine 425g',q:'1 can',p:1.50},
+    {n:'Woolworths cottage cheese 500g',q:'100g',p:0.90},{n:'Salt, pepper, paprika',q:'to taste',p:0.05}],
+   steps:['Pierce potato, microwave 8–10 min (or bake 200°C 45 min).','Split open, fluff inside with fork.','Mix drained tuna with cottage cheese, season.','Pile onto potato.']},
+  // DINNER
+  {id:'d1',name:'Beef mince bolognese',time:'25 min',cals:780,protein:52,carbs:72,fat:22,diff:'Easy',cost:5.50,tags:['dinner','bulk','meal prep'],
+   ingredients:[
+    {n:'Woolworths beef mince 500g',q:'250g',p:3.00},{n:'Woolworths pasta spaghetti 500g',q:'150g dry',p:0.55},
+    {n:'Mutti passata 700ml',q:'350ml',p:1.75},{n:'Garlic cloves',q:'2 cloves',p:0.20},{n:'Olive oil',q:'1 tbsp',p:0.20},{n:'Italian herbs',q:'1 tsp',p:0.05}],
+   steps:['Boil salted water, cook pasta until al dente.','Brown mince in olive oil with crushed garlic.','Add passata and herbs, simmer 10 min.','Drain pasta, combine with sauce.']},
+  {id:'d2',name:'Honey soy chicken thighs',time:'30 min',cals:740,protein:50,carbs:68,fat:18,diff:'Easy',cost:4.80,tags:['dinner','bulk','meal prep'],
+   ingredients:[
+    {n:'Woolworths chicken thighs 1kg',q:'200g',p:2.60},{n:'Woolworths white rice 2kg',q:'150g dry',p:0.45},
+    {n:'Kikkoman soy sauce 250ml',q:'3 tbsp',p:0.60},{n:'Capilano honey 500g',q:'2 tbsp',p:0.80},{n:'Garlic cloves',q:'2 cloves',p:0.20}],
+   steps:['Mix soy sauce, honey, minced garlic as marinade.','Coat chicken thighs, marinate 10 min minimum.','Cook in pan on medium-high 6–8 min each side until caramelised.','Cook rice. Serve chicken over rice with marinade drizzled.']},
+  {id:'d3',name:'Egg fried rice',time:'20 min',cals:690,protein:30,carbs:80,fat:20,diff:'Easy',cost:2.60,tags:['dinner','bulk','lunch'],
+   ingredients:[
+    {n:'Woolworths white rice 2kg',q:'200g cooked (day-old)',p:0.30},{n:'Free range eggs 12pk',q:'3 eggs',p:1.05},
+    {n:'Woolworths frozen mixed veg 1kg',q:'100g',p:0.37},{n:'Kikkoman soy sauce 250ml',q:'2 tbsp',p:0.40},{n:'Olive oil',q:'1 tbsp',p:0.20},{n:'Garlic cloves',q:'1 clove',p:0.10}],
+   steps:['Heat oil in pan or wok on high.','Fry garlic and frozen veg 2 min.','Push aside, scramble eggs in pan.','Add cold rice, break up clumps.','Add soy sauce, toss 2 min on high heat.']},
+  {id:'d4',name:'Chicken stir fry',time:'20 min',cals:650,protein:50,carbs:55,fat:16,diff:'Easy',cost:5.00,tags:['dinner','bulk','meal prep'],
+   ingredients:[
+    {n:'Woolworths chicken thighs 1kg',q:'200g diced',p:2.60},{n:'Woolworths frozen stir fry veg 1kg',q:'200g',p:0.74},
+    {n:'Kikkoman soy sauce 250ml',q:'2 tbsp',p:0.40},{n:'Ayam oyster sauce 200ml',q:'1 tbsp',p:0.55},{n:'Garlic cloves',q:'2 cloves',p:0.20},{n:'Woolworths white rice 2kg',q:'150g dry',p:0.45}],
+   steps:['Cook rice separately.','Heat oil, cook chicken until golden (~6 min).','Add garlic and frozen veg, stir fry 3 min.','Add soy sauce and oyster sauce, toss through.','Serve over rice.']},
+  {id:'d5',name:'Tuna pasta bake',time:'35 min',cals:700,protein:50,carbs:70,fat:18,diff:'Easy',cost:4.20,tags:['dinner','meal prep'],
+   ingredients:[
+    {n:'Woolworths tuna in brine 425g',q:'2 cans',p:3.00},{n:'Woolworths pasta penne 500g',q:'150g dry',p:0.55},
+    {n:'Woolworths diced tomatoes 400g',q:'1 can',p:1.10},{n:'Woolworths shredded cheese 250g',q:'50g',p:1.00},{n:'Garlic cloves',q:'2 cloves',p:0.20},{n:'Dried oregano',q:'1 tsp',p:0.05}],
+   steps:['Cook pasta, drain.','Fry garlic 1 min in oil.','Add tomatoes and oregano, simmer 5 min.','Stir in tuna and pasta. Pour into baking dish.','Top with cheese. Bake 200°C for 15 min.']},
+  {id:'d6',name:'Mince & veggie curry',time:'35 min',cals:750,protein:48,carbs:65,fat:20,diff:'Easy',cost:5.20,tags:['dinner','bulk','meal prep'],
+   ingredients:[
+    {n:'Woolworths beef mince 500g',q:'200g',p:2.40},{n:'Woolworths white rice 2kg',q:'150g dry',p:0.45},
+    {n:'Woolworths diced tomatoes 400g',q:'1 can',p:1.10},{n:'Woolworths coconut milk 400ml',q:'200ml',p:0.95},{n:'Woolworths frozen mixed veg 1kg',q:'150g',p:0.55},{n:'Clive of India curry powder',q:'2 tsp',p:0.15},{n:'Garlic cloves',q:'2 cloves',p:0.20}],
+   steps:['Cook rice separately.','Brown mince with garlic.','Add curry powder, stir 1 min.','Add tomatoes, coconut milk, veg.','Simmer 15 min. Serve over rice.']},
+  {id:'d7',name:'Garlic butter pasta with chicken',time:'25 min',cals:760,protein:48,carbs:74,fat:22,diff:'Easy',cost:4.60,tags:['dinner','bulk'],
+   ingredients:[
+    {n:'Woolworths chicken breast 1kg',q:'180g',p:2.70},{n:'Woolworths pasta penne 500g',q:'150g dry',p:0.55},
+    {n:'Western Star butter 250g',q:'30g',p:0.65},{n:'Garlic cloves',q:'3 cloves',p:0.30},{n:'Woolworths shredded cheese 250g',q:'30g',p:0.60},{n:'Italian herbs',q:'1 tsp',p:0.05}],
+   steps:['Cook pasta al dente, reserve ½ cup pasta water.','Season and cook chicken in pan, slice.','Melt butter in same pan, fry garlic 1 min.','Add pasta, splash of pasta water, toss to coat.','Plate with chicken and cheese on top.']},
+  {id:'d8',name:'Simple ramen upgrade',time:'15 min',cals:680,protein:40,carbs:70,fat:20,diff:'Very easy',cost:3.80,tags:['dinner','bulk'],
+   ingredients:[
+    {n:'Woolworths beef mince 500g',q:'150g',p:1.80},{n:'Woolworths instant noodles 5pk',q:'2 packs',p:0.80},
+    {n:'Free range eggs 12pk',q:'2 eggs',p:0.70},{n:'Kikkoman soy sauce 250ml',q:'2 tbsp',p:0.40},{n:'Woolworths frozen mixed veg 1kg',q:'100g',p:0.37}],
+   steps:['Boil water, cook noodles per packet (use half the seasoning).','Pan fry mince until browned.','Soft boil eggs 6 min, peel and halve.','Microwave veg 2 min.','Build bowl: noodles, mince, veg, eggs, soy sauce.']},
+  {id:'d9',name:'Beef & vegetable soup',time:'40 min',cals:620,protein:45,carbs:55,fat:16,diff:'Easy',cost:4.40,tags:['dinner','meal prep'],
+   ingredients:[
+    {n:'Woolworths beef mince 500g',q:'200g',p:2.40},{n:'Woolworths diced tomatoes 400g',q:'1 can',p:1.10},
+    {n:'Woolworths frozen mixed veg 1kg',q:'200g',p:0.74},{n:'Woolworths beef stock 1L',q:'500ml',p:1.10},{n:'Garlic cloves',q:'2 cloves',p:0.20},{n:'Italian herbs',q:'1 tsp',p:0.05}],
+   steps:['Brown mince with garlic in large pot.','Add tomatoes, stock, frozen veg.','Simmer 25 min. Season to taste.','Makes 3 serves. Freezes well.']},
+  {id:'d10',name:'Sheet pan lemon herb chicken & potato',time:'45 min',cals:710,protein:50,carbs:58,fat:18,diff:'Easy',cost:4.90,tags:['dinner','bulk','meal prep'],
+   ingredients:[
+    {n:'Woolworths chicken thighs 1kg',q:'200g',p:2.60},{n:'Woolworths washed potatoes 1kg',q:'250g',p:0.90},
+    {n:'Olive oil',q:'2 tbsp',p:0.40},{n:'Lemon',q:'½ lemon',p:0.35},{n:'Garlic cloves',q:'3 cloves',p:0.30},{n:'Italian herbs',q:'2 tsp',p:0.10}],
+   steps:['Preheat oven 200°C.','Chop potatoes into chunks, toss with olive oil, garlic, herbs.','Spread on baking tray.','Coat chicken with lemon juice, olive oil, herbs. Place on tray.','Roast 35–40 min until chicken golden and potato crispy.']},
+  // SNACK
+  {id:'s1',name:'Cottage cheese toast',time:'5 min',cals:380,protein:28,carbs:38,fat:8,diff:'Very easy',cost:2.10,tags:['snack','breakfast'],
+   ingredients:[
+    {n:'Woolworths sourdough loaf 680g',q:'2 thick slices',p:0.70},{n:'Woolworths cottage cheese 500g',q:'150g',p:1.35},
+    {n:'Cherry tomatoes 250g punnet',q:'handful',p:0.50}],
+   steps:['Toast bread.','Spread cottage cheese generously.','Top with sliced cherry tomatoes, season.']},
+  {id:'s2',name:'Banana & peanut butter toast',time:'3 min',cals:420,protein:12,carbs:58,fat:14,diff:'Very easy',cost:1.50,tags:['snack','pre-workout'],
+   ingredients:[
+    {n:'Woolworths sourdough loaf 680g',q:'2 slices',p:0.70},{n:'Allowrie peanut butter 375g',q:'2 tbsp',p:0.80},
+    {n:'Banana',q:'1 large',p:0.35},{n:'Capilano honey 500g',q:'1 tsp',p:0.20}],
+   steps:['Toast bread.','Spread peanut butter.','Slice banana on top.','Drizzle honey.']},
+  {id:'s3',name:'Boiled eggs & rice cakes',time:'10 min',cals:320,protein:22,carbs:28,fat:10,diff:'Very easy',cost:1.60,tags:['snack'],
+   ingredients:[
+    {n:'Free range eggs 12pk',q:'3 eggs',p:1.05},{n:'Woolworths rice cakes 100g',q:'4 cakes',p:0.55}],
+   steps:['Boil eggs 8–10 min for hard boiled.','Cool in cold water, peel.','Eat with rice cakes.','Season eggs with salt and pepper.']},
+  {id:'s4',name:'Milk & banana',time:'1 min',cals:310,protein:12,carbs:52,fat:6,diff:'Very easy',cost:0.90,tags:['snack','pre-workout'],
+   ingredients:[
+    {n:'Full cream milk 2L',q:'300ml',p:0.65},{n:'Banana',q:'1 large',p:0.35}],
+   steps:['Drink milk.','Eat banana.','Liquid calories — easy way to hit surplus.']},
+  {id:'s5',name:'Greek yoghurt & honey',time:'2 min',cals:260,protein:20,carbs:32,fat:5,diff:'Very easy',cost:1.30,tags:['snack'],
+   ingredients:[
+    {n:'Woolworths Greek yoghurt 1kg',q:'200g',p:1.00},{n:'Capilano honey 500g',q:'2 tsp',p:0.40}],
+   steps:['Spoon yoghurt into bowl.','Drizzle honey.','Eat. Done.']},
+  {id:'s6',name:'Date & nut energy balls',time:'15 min',cals:380,protein:8,carbs:45,fat:18,diff:'Easy',cost:3.20,tags:['snack','meal prep'],
+   ingredients:[
+    {n:'Woolworths pitted dates 500g',q:'150g',p:1.50},{n:'Mixed nuts Woolworths 375g',q:'80g',p:2.08},
+    {n:'Woolworths rolled oats 1kg',q:'40g',p:0.20},{n:'Allowrie peanut butter 375g',q:'1 tbsp',p:0.40}],
+   steps:['Blend dates until paste forms.','Add nuts, oats, peanut butter. Pulse until combined.','Roll into 12 balls.','Refrigerate 30 min. Keeps 1 week in fridge.']},
+  // PRE-WORKOUT
+  {id:'pw1',name:'Rice cakes with honey',time:'2 min',cals:250,protein:4,carbs:52,fat:2,diff:'Very easy',cost:0.90,tags:['pre-workout','snack'],
+   ingredients:[
+    {n:'Woolworths rice cakes 100g',q:'4 cakes',p:0.55},{n:'Capilano honey 500g',q:'2 tbsp',p:0.80}],
+   steps:['Spread honey on rice cakes.','Eat 30–60 min before training.','Easy fast carbs — no gut issues during training.']},
+  {id:'pw2',name:'Dates & milk',time:'2 min',cals:330,protein:10,carbs:58,fat:5,diff:'Very easy',cost:1.80,tags:['pre-workout'],
+   ingredients:[
+    {n:'Woolworths pitted dates 500g',q:'5–6 dates (60g)',p:0.60},{n:'Full cream milk 2L',q:'200ml',p:0.44}],
+   steps:['Eat dates.','Drink milk.','Fast-digesting carbs + protein. Good 45 min pre-session.']},
+  {id:'pw3',name:'Oats & banana pre-workout bowl',time:'5 min',cals:420,protein:14,carbs:72,fat:6,diff:'Very easy',cost:1.60,tags:['pre-workout','breakfast'],
+   ingredients:[
+    {n:'Woolworths rolled oats 1kg',q:'80g',p:0.40},{n:'Full cream milk 2L',q:'200ml',p:0.44},
+    {n:'Banana',q:'1 large',p:0.35},{n:'Capilano honey 500g',q:'1 tsp',p:0.20}],
+   steps:['Microwave oats in milk 2–3 min.','Slice banana on top, drizzle honey.','Eat 60 min before training.']},
+  // MEAL PREP
+  {id:'mp1',name:'Sunday batch: chicken & rice',time:'35 min',cals:720,protein:55,carbs:75,fat:14,diff:'Easy',cost:4.20,tags:['meal prep','bulk','lunch','dinner'],
+   ingredients:[
+    {n:'Woolworths chicken breast 1kg',q:'800g (5–6 breasts)',p:12.00},{n:'Woolworths white rice 2kg',q:'600g dry',p:1.80},
+    {n:'Garlic powder',q:'2 tsp',p:0.10},{n:'Italian herbs',q:'2 tsp',p:0.10},{n:'Olive oil',q:'2 tbsp',p:0.40},{n:'Kikkoman soy sauce 250ml',q:'for serving',p:0.30}],
+   steps:['Preheat oven 200°C.','Season all chicken with garlic powder, herbs, olive oil, salt.','Bake on tray 25 min.','Cook all rice in rice cooker or pot.','Portion into 5 containers: 1 serve chicken + rice each.','Refrigerates 4 days. Freeze remainder.']},
+  {id:'mp2',name:'Sunday batch: bolognese',time:'40 min',cals:780,protein:52,carbs:72,fat:22,diff:'Easy',cost:5.50,tags:['meal prep','bulk','dinner'],
+   ingredients:[
+    {n:'Woolworths beef mince 500g',q:'1kg (2 packs)',p:12.00},{n:'Woolworths pasta spaghetti 500g',q:'400g dry',p:1.45},
+    {n:'Mutti passata 700ml',q:'2 bottles',p:7.00},{n:'Garlic cloves',q:'4 cloves',p:0.40},{n:'Olive oil',q:'2 tbsp',p:0.40},{n:'Italian herbs',q:'2 tsp',p:0.10}],
+   steps:['Brown mince in large pot with garlic and oil.','Add both bottles passata and herbs.','Simmer 20 min.','Cook pasta in batches.','Portion into 5 containers.','Freeze 2 containers for later in the week.']},
+  {id:'mp3',name:'Overnight oats x5',time:'10 min',cals:520,protein:28,carbs:65,fat:12,diff:'Very easy',cost:2.00,tags:['meal prep','breakfast'],
+   ingredients:[
+    {n:'Woolworths rolled oats 1kg',q:'500g (100g per jar)',p:2.50},{n:'Full cream milk 2L',q:'1.25L',p:2.75},
+    {n:'Woolworths Greek yoghurt 1kg',q:'500g',p:2.50},{n:'Banana',q:'5 medium',p:1.75},{n:'Capilano honey 500g',q:'5 tsp',p:1.00}],
+   steps:['Get 5 jars or containers.','In each: 100g oats + 250ml milk + 100g yoghurt.','Stir, seal, refrigerate overnight.','In morning: top with sliced banana and honey.','Lasts 5 days in fridge — grab and go every morning.']},
+];
+
+const FILTERS=['All','⭐ Favourites','breakfast','lunch','dinner','snack','bulk','meal prep','pre-workout','Very easy','Easy','Medium'];
+
+// ─── STATE ─────────────────────────────────────────────────────────────────
+const raw=load();
+let currentMode=raw.currentMode||'A';
+let currentDay=raw.currentDay||'u1';
+let exState=raw.exState||{};
+let calData=raw.calData||{};
+let weightLog=raw.weightLog||[];
+let shopItems=raw.shopItems||[];
+let shopChecked=raw.shopChecked||{};
+let favs=raw.favs||[];
+let activeFilter=raw.activeFilter||'All';
+let openRecipes=raw.openRecipes||{};
+let sessionNotes=raw.sessionNotes||{};
+let calViewYear=new Date().getFullYear();
+let calViewMonth=new Date().getMonth();
+
+// ─── NAV ───────────────────────────────────────────────────────────────────
+function showPage(name,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('on'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('on'));
+  document.getElementById('pg-'+name).classList.add('on');
   btn.classList.add('on');
-  if (name === 'tracker') renderTracker();
+  if(name==='workout'){updateLogBtn();}
+  if(name==='progress'){renderCalendar();renderStreakStats();}
+  if(name==='body'){drawChart();}
+  if(name==='recipes'){renderRecipes();}
 }
 
-function setMode(m) {
-  currentMode = m;
-  document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('on'));
+// ─── WORKOUT ───────────────────────────────────────────────────────────────
+function setMode(m){
+  currentMode=m;
+  document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('on'));
   document.querySelectorAll('.mode-btn')[['A','B','C'].indexOf(m)].classList.add('on');
-  document.getElementById('mode-indicator').textContent = MODE_INFO[m].label;
-  document.getElementById('mode-desc').innerHTML = MODE_INFO[m].desc;
-  currentDay = MODE_DAYS[m][0];
-  renderDayTabs();
-  renderExercises();
-  saveState();
+  document.getElementById('mode-indicator').textContent=MODE_INFO[m].label;
+  document.getElementById('mode-desc').innerHTML=MODE_INFO[m].desc;
+  currentDay=MODE_DAYS[m][0];
+  renderDayTabs();renderExercises();save();
 }
 
-function renderDayTabs() {
-  const tabs = document.getElementById('day-tabs');
-  tabs.innerHTML = '';
-  MODE_DAYS[currentMode].forEach(key => {
-    const d = DAYS_DATA[key];
-    const btn = document.createElement('div');
-    btn.className = 'day-tab' + (key === currentDay ? ' on' : '');
-    btn.textContent = d.label;
-    btn.onclick = () => { currentDay = key; renderDayTabs(); renderExercises(); saveState(); };
+function renderDayTabs(){
+  const tabs=document.getElementById('day-tabs');tabs.innerHTML='';
+  MODE_DAYS[currentMode].forEach(key=>{
+    const btn=document.createElement('div');
+    btn.className='day-tab'+(key===currentDay?' on':'');
+    btn.textContent=DAYS_DATA[key].label;
+    btn.onclick=()=>{currentDay=key;renderDayTabs();renderExercises();save();};
     tabs.appendChild(btn);
   });
 }
 
-function getExKey(dayKey, idx) { return dayKey + '_' + idx; }
+function gk(dayKey,idx){
+  // Generate or retrieve stable unique ID for this exercise slot
+  const posKey=dayKey+'_'+idx;
+  if(!exState[posKey])exState[posKey]={};
+  if(!exState[posKey]._id){exState[posKey]._id='ex_'+Date.now()+'_'+Math.random().toString(36).slice(2,6);}
+  return posKey;
+}
 
-function renderExercises() {
-  const day = DAYS_DATA[currentDay];
-  const list = document.getElementById('ex-list');
-  list.innerHTML = '';
-  day.exercises.forEach((ex, i) => {
-    const key = getExKey(currentDay, i);
-    if (!exState[key]) exState[key] = { sets: ex.sets, reps: ex.reps, kg: ex.kg };
-    const s = exState[key];
-    const badgeHtml = ex.badge === 'shoulder'
-      ? '<span class="ex-badge badge-warn">shoulder</span>'
-      : ex.badge === 'new' ? '<span class="ex-badge badge-new">added</span>' : '';
-    const kgHtml = ex.bw
-      ? `<div class="sl-group"><div class="sl-label">weight</div><div class="sl-row"><div style="flex:1;height:3px;background:var(--bg3);border-radius:2px"></div><div class="sl-val" style="color:var(--faint)">BW</div></div></div>`
-      : `<div class="sl-group"><div class="sl-label">weight (kg)</div><div class="sl-row"><input type="range" min="0" max="150" step="2.5" value="${s.kg}" oninput="updateEx('${key}','kg',this.value)"><div class="sl-val" id="${key}-kg">${s.kg}kg</div></div></div>`;
-    const card = document.createElement('div');
-    card.innerHTML = `
-      <div class="ex-row">
-        <div class="ex-top">
-          <div><div class="ex-name">${ex.name}${badgeHtml}</div>${ex.note ? `<div class="ex-note">${ex.note}</div>` : ''}</div>
-        </div>
-        <div class="sliders">
-          <div class="sl-group"><div class="sl-label">sets</div><div class="sl-row"><input type="range" min="1" max="7" step="1" value="${s.sets}" oninput="updateEx('${key}','sets',this.value)"><div class="sl-val" id="${key}-sets">${s.sets}</div></div></div>
-          <div class="sl-group"><div class="sl-label">reps</div><div class="sl-row"><input type="range" min="1" max="25" step="1" value="${s.reps}" oninput="updateEx('${key}','reps',this.value)"><div class="sl-val" id="${key}-reps">${s.reps}</div></div></div>
-          ${kgHtml}
-        </div>
-      </div>`;
+function renderExercises(){
+  const day=DAYS_DATA[currentDay];
+  const list=document.getElementById('ex-list');list.innerHTML='';
+  const notesKey='notes_'+currentDay;
+  const notesEl=document.getElementById('session-notes');
+  if(notesEl)notesEl.value=sessionNotes[notesKey]||'';
+  day.exercises.forEach((ex,i)=>{
+    const key=gk(currentDay,i);
+    const s=exState[key];
+    if(s.sets===undefined)s.sets=ex.sets;
+    if(s.reps===undefined)s.reps=ex.reps;
+    if(s.kg===undefined)s.kg=ex.kg;
+    // bwOverride: true=BW, false=KG. Default from exercise definition.
+    if(s.bwOverride===undefined)s.bwOverride=ex.bw||false;
+    const isBW=s.bwOverride;
+    const tagHtml='';
+    const toggleHtml=`<span class="bw-toggle${isBW?' bw-on':''}" onclick="toggleBW('${key}')">${isBW?'BW':'KG'}</span>`;
+    const kgHtml=isBW
+      ?`<div class="sl-group"><div class="sl-label">KG</div><div class="sl-track" style="display:flex;align-items:center;padding-left:4px"><span style="color:var(--faint);font-size:12px">Bodyweight</span></div><div class="sl-val" style="color:var(--faint)">—</div></div>`
+      :`<div class="sl-group"><div class="sl-label">KG</div><div class="sl-track"><input type="range" min="0" max="150" step="2.5" value="${s.kg}" oninput="updateEx('${key}','kg',this.value)"></div><div class="sl-val" id="${key}-kg">${s.kg}kg</div></div>`;
+    const card=document.createElement('div');
+    card.innerHTML=`<div class="ex-row"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:2px"><div class="ex-name">${ex.name}${tagHtml}</div>${toggleHtml}</div>${ex.note?`<div class="ex-note">${ex.note}</div>`:''}<div class="sliders"><div class="sl-group"><div class="sl-label">SETS</div><div class="sl-track"><input type="range" min="1" max="7" step="1" value="${s.sets}" oninput="updateEx('${key}','sets',this.value)"></div><div class="sl-val" id="${key}-sets">${s.sets}</div></div><div class="sl-group"><div class="sl-label">REPS</div><div class="sl-track"><input type="range" min="1" max="25" step="1" value="${s.reps}" oninput="updateEx('${key}','reps',this.value)"></div><div class="sl-val" id="${key}-reps">${s.reps}</div></div>${kgHtml}</div></div>`;
     list.appendChild(card);
   });
   updateVolume();
 }
 
-function updateEx(key, field, val) {
-  if (!exState[key]) exState[key] = {};
-  exState[key][field] = parseFloat(val);
-  const el = document.getElementById(key + '-' + field);
-  if (el) el.textContent = field === 'kg' ? val + 'kg' : val;
-  updateVolume();
-  saveState();
+function toggleBW(key){
+  if(!exState[key])exState[key]={};
+  exState[key].bwOverride=!exState[key].bwOverride;
+  save();renderExercises();
 }
 
-function updateVolume() {
-  const day = DAYS_DATA[currentDay];
-  let sets = 0, reps = 0, vol = 0;
-  day.exercises.forEach((ex, i) => {
-    const key = getExKey(currentDay, i);
-    const s = exState[key] || { sets: ex.sets, reps: ex.reps, kg: ex.kg };
-    sets += s.sets;
-    reps += s.sets * s.reps;
-    vol += s.sets * s.reps * (ex.bw ? 0 : s.kg);
+function updateEx(key,field,val){
+  if(!exState[key])exState[key]={};
+  exState[key][field]=parseFloat(val);
+  const el=document.getElementById(key+'-'+field);
+  if(el)el.textContent=field==='kg'?val+'kg':val;
+  updateVolume();save();
+}
+
+function updateVolume(){
+  const day=DAYS_DATA[currentDay];
+  let sets=0,reps=0,vol=0;
+  day.exercises.forEach((ex,i)=>{
+    const s=exState[gk(currentDay,i)]||{sets:ex.sets,reps:ex.reps,kg:ex.kg,bwOverride:ex.bw||false};
+    sets+=s.sets;reps+=s.sets*s.reps;
+    if(!s.bwOverride)vol+=s.sets*s.reps*(s.kg||0);
   });
-  document.getElementById('v-sets').textContent = sets;
-  document.getElementById('v-reps').textContent = reps;
-  document.getElementById('v-vol').textContent = Math.round(vol).toLocaleString();
+  document.getElementById('v-sets').textContent=sets;
+  document.getElementById('v-reps').textContent=reps;
+  document.getElementById('v-vol').textContent=Math.round(vol).toLocaleString();
 }
 
-function resetDay() {
-  const day = DAYS_DATA[currentDay];
-  day.exercises.forEach((ex, i) => {
-    const key = getExKey(currentDay, i);
-    exState[key] = { sets: ex.sets, reps: ex.reps, kg: ex.kg };
+function resetDay(){
+  const day=DAYS_DATA[currentDay];
+  day.exercises.forEach((ex,i)=>{
+    const key=gk(currentDay,i);
+    const id=exState[key]?._id;
+    const bw=exState[key]?.bwOverride??ex.bw??false;
+    exState[key]={_id:id,sets:ex.sets,reps:ex.reps,kg:ex.kg,bwOverride:bw};
   });
-  renderExercises();
-  saveState();
+  renderExercises();save();
 }
 
-function saveWorkout() {
-  alert('Session saved! Mark today as trained in the Streak tab.');
+function saveNotes(){
+  const key='notes_'+currentDay;
+  sessionNotes[key]=document.getElementById('session-notes').value;
+  save();
 }
 
-// TRACKER
-const WEEK_LABELS = ['Week 1','Week 2','Week 3','Week 4'];
-const DAY_LETTERS = ['M','T','W','T','F','S','S'];
-const STATES = ['rest','done','skip'];
+function updateLogBtn(){
+  const btn=document.getElementById('log-session-btn');
+  if(!btn)return;
+  const today=dateKey(new Date());
+  const logged=calData[today]==='done';
+  btn.textContent=logged?'Logged ✓':'Log session';
+  btn.style.opacity=logged?'0.5':'1';
+  btn.style.cursor=logged?'default':'pointer';
+}
 
-function renderTracker() {
-  const sec = document.getElementById('streak-section');
-  sec.innerHTML = '';
-  for (let w = 0; w < 4; w++) {
-    const wl = document.createElement('div');
-    wl.className = 'week-label';
-    wl.textContent = WEEK_LABELS[w];
-    sec.appendChild(wl);
-    const grid = document.createElement('div');
-    grid.className = 'week-grid';
-    for (let d = 0; d < 7; d++) {
-      const idx = w * 7 + d;
-      const cell = document.createElement('div');
-      const st = trackerData[idx] || 'rest';
-      cell.className = 's-cell ' + st;
-      cell.innerHTML = `<span class="day-letter">${DAY_LETTERS[d]}</span><span class="state-dot"></span>`;
-      cell.onclick = () => cycleCell(idx, cell);
-      grid.appendChild(cell);
+function logSession(){
+  const today=dateKey(new Date());
+  if(calData[today]==='done'){
+    // Already logged — allow un-logging
+    calData[today]='rest';
+  } else {
+    calData[today]='done';
+  }
+  save();
+  updateLogBtn();
+  if(document.getElementById('pg-progress').classList.contains('on')){
+    renderCalendar();renderStreakStats();
+  }
+}
+
+// ─── CALENDAR ──────────────────────────────────────────────────────────────
+function dateKey(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DOW_LABELS=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+
+function changeMonth(delta){
+  calViewMonth+=delta;
+  if(calViewMonth>11){calViewMonth=0;calViewYear++;}
+  if(calViewMonth<0){calViewMonth=11;calViewYear--;}
+  renderCalendar();
+}
+
+function renderCalendar(){
+  document.getElementById('cal-month-label').textContent=MONTHS[calViewMonth]+' '+calViewYear;
+  // DOW headers
+  const dow=document.getElementById('cal-dow');dow.innerHTML='';
+  DOW_LABELS.forEach(l=>{const d=document.createElement('div');d.className='cal-dow-label';d.textContent=l;dow.appendChild(d);});
+  // Grid
+  const grid=document.getElementById('cal-grid');grid.innerHTML='';
+  const today=new Date();today.setHours(0,0,0,0);
+  const firstDay=new Date(calViewYear,calViewMonth,1);
+  // Monday-start offset
+  let startOffset=firstDay.getDay()-1;if(startOffset<0)startOffset=6;
+  const daysInMonth=new Date(calViewYear,calViewMonth+1,0).getDate();
+  // Empty cells
+  for(let i=0;i<startOffset;i++){const c=document.createElement('div');c.className='cal-cell empty';grid.appendChild(c);}
+  for(let d=1;d<=daysInMonth;d++){
+    const date=new Date(calViewYear,calViewMonth,d);
+    const dk=dateKey(date);
+    const isFuture=date>today;
+    const isToday=dk===dateKey(today);
+    const st=calData[dk]||'rest';
+    const cell=document.createElement('div');
+    let cls='cal-cell';
+    if(isFuture)cls+=' future';
+    else if(st==='done')cls+=' done';
+    else if(st==='skip')cls+=' skip';
+    else if(isToday)cls+=' today';
+    cell.className=cls;
+    cell.innerHTML=`${d}<span class="cal-dot"></span>`;
+    if(!isFuture)cell.onclick=()=>cycleCal(dk,cell,date,today);
+    grid.appendChild(cell);
+  }
+}
+
+function cycleCal(dk,cell,date,today){
+  const states=['rest','done','skip'];
+  const cur=states.indexOf(calData[dk]||'rest');
+  const next=states[(cur+1)%states.length];
+  calData[dk]=next;
+  const isToday=dk===dateKey(today);
+  cell.className='cal-cell'+(next==='done'?' done':next==='skip'?' skip':isToday?' today':'');
+  cell.innerHTML=`${date.getDate()}<span class="cal-dot"></span>`;
+  renderStreakStats();save();
+}
+
+function renderStreakStats(){
+  const allKeys=Object.keys(calData).sort();
+  let done=0,skip=0,streak=0,cur=0,consec=0,alert=false;
+  allKeys.forEach(k=>{
+    const s=calData[k];
+    if(s==='done'){done++;cur++;streak=Math.max(streak,cur);consec=0;}
+    else if(s==='skip'){skip++;cur=0;consec++;if(consec>=2)alert=true;}
+    else{cur=0;consec=0;}
+  });
+  document.getElementById('st-done').textContent=done;
+  document.getElementById('st-streak').textContent=streak;
+  document.getElementById('st-skip').textContent=skip;
+  document.getElementById('alert-box').style.display=alert?'block':'none';
+}
+
+// ─── BODY ──────────────────────────────────────────────────────────────────
+function logWeight(){
+  const inp=document.getElementById('weight-input');
+  const val=parseFloat(inp.value);
+  if(isNaN(val)||val<40||val>120){alert('Enter a weight between 40–120 kg.');return;}
+  const today=dateKey(new Date());
+  // Update or add entry for today
+  const existing=weightLog.findIndex(e=>e.date===today);
+  if(existing>=0)weightLog[existing].kg=val;
+  else weightLog.push({date:today,kg:val});
+  weightLog.sort((a,b)=>a.date.localeCompare(b.date));
+  inp.value='';save();drawChart();
+}
+
+function clearWeightLog(){
+  if(confirm('Clear all weight entries?')){weightLog=[];save();drawChart();}
+}
+
+function drawChart(){
+  const canvas=document.getElementById('weightChart');if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const W=canvas.offsetWidth||300;const H=150;
+  canvas.width=W*dpr;canvas.height=H*dpr;ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+  const data=weightLog.length>0?weightLog:[{date:'Start',kg:58}];
+  const TARGET=65;
+  const vals=data.map(d=>d.kg);
+  const minV=Math.min(...vals,55)-1;
+  const maxV=Math.max(...vals,TARGET)+1;
+  const pad={l:34,r:14,t:10,b:24};
+  const cW=W-pad.l-pad.r;const cH=H-pad.t-pad.b;
+  const xS=i=>pad.l+(i/Math.max(data.length-1,1))*cW;
+  const yS=v=>pad.t+cH-(v-minV)/(maxV-minV)*cH;
+  // grid
+  [0,0.25,0.5,0.75,1].forEach(t=>{
+    const y=pad.t+t*cH;const v=maxV-(maxV-minV)*t;
+    ctx.strokeStyle='rgba(255,255,255,0.05)';ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+cW,y);ctx.stroke();
+    ctx.fillStyle='#555';ctx.font=`${10*dpr/dpr}px -apple-system`;ctx.textAlign='right';
+    ctx.fillText(v.toFixed(1),pad.l-4,y+4);
+  });
+  // target line
+  ctx.strokeStyle='rgba(61,220,132,0.3)';ctx.lineWidth=1;ctx.setLineDash([4,4]);
+  ctx.beginPath();ctx.moveTo(pad.l,yS(TARGET));ctx.lineTo(pad.l+cW,yS(TARGET));ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(61,220,132,0.6)';ctx.font='10px -apple-system';ctx.textAlign='left';
+  ctx.fillText('65 kg target',pad.l+4,yS(TARGET)-4);
+  // line
+  if(data.length>1){
+    ctx.strokeStyle='#3ddc84';ctx.lineWidth=2;ctx.beginPath();
+    data.forEach((d,i)=>{i===0?ctx.moveTo(xS(i),yS(d.kg)):ctx.lineTo(xS(i),yS(d.kg));});
+    ctx.stroke();
+  }
+  // dots + labels
+  data.forEach((d,i)=>{
+    ctx.fillStyle='#3ddc84';ctx.beginPath();ctx.arc(xS(i),yS(d.kg),3.5,0,Math.PI*2);ctx.fill();
+    if(i===0||i===data.length-1){
+      ctx.fillStyle='#666';ctx.font='9px -apple-system';ctx.textAlign='center';
+      const label=d.date.length>10?d.date.slice(5):d.date;
+      ctx.fillText(label,xS(i),H-pad.b+13);
     }
-    sec.appendChild(grid);
-  }
-  updateTrackerStats();
-}
-
-function cycleCell(idx, cell) {
-  const cur = STATES.indexOf(trackerData[idx] || 'rest');
-  const next = STATES[(cur + 1) % STATES.length];
-  trackerData[idx] = next;
-  cell.className = 's-cell ' + next;
-  updateTrackerStats();
-  saveState();
-}
-
-function updateTrackerStats() {
-  let done = 0, skip = 0, streak = 0, curStreak = 0, consecSkip = 0, alert = false;
-  trackerData.forEach(s => {
-    if (s === 'done') { done++; curStreak++; streak = Math.max(streak, curStreak); consecSkip = 0; }
-    else if (s === 'skip') { skip++; curStreak = 0; consecSkip++; if (consecSkip >= 2) alert = true; }
-    else { curStreak = 0; consecSkip = 0; }
   });
-  document.getElementById('t-done').textContent = done;
-  document.getElementById('t-streak').textContent = streak;
-  document.getElementById('t-skip').textContent = skip;
-  document.getElementById('alert-box').style.display = alert ? 'block' : 'none';
 }
 
-function resetTracker() {
-  if (confirm('Reset all streak data?')) {
-    trackerData = Array(28).fill('rest');
-    renderTracker();
-    saveState();
+// ─── RECIPES ───────────────────────────────────────────────────────────────
+function renderRecipes(){
+  // Filter bar
+  const fb=document.getElementById('filter-bar');fb.innerHTML='';
+  FILTERS.forEach(f=>{
+    const btn=document.createElement('div');
+    btn.className='filter-btn'+(f===activeFilter?' on':'');
+    btn.textContent=f;
+    btn.onclick=()=>{activeFilter=f;save();renderRecipes();};
+    fb.appendChild(btn);
+  });
+  // Filter recipes
+  let list=RECIPES;
+  if(activeFilter==='⭐ Favourites')list=RECIPES.filter(r=>favs.includes(r.id));
+  else if(activeFilter==='All')list=RECIPES;
+  else if(['Very easy','Easy','Medium'].includes(activeFilter))list=RECIPES.filter(r=>r.diff===activeFilter);
+  else list=RECIPES.filter(r=>r.tags.includes(activeFilter));
+  // Sort favs first
+  list=[...list].sort((a,b)=>{
+    const af=favs.includes(a.id)?0:1;const bf=favs.includes(b.id)?0:1;return af-bf;
+  });
+  const rl=document.getElementById('recipe-list');rl.innerHTML='';
+  list.forEach(r=>{
+    const inList=shopItems.some(i=>i.recipeId===r.id);
+    const isFav=favs.includes(r.id);
+    const isOpen=openRecipes[r.id];
+    const card=document.createElement('div');card.className='recipe-card';
+    card.innerHTML=`
+      <div class="recipe-top" onclick="toggleRecipe('${r.id}')">
+        <div style="flex:1">
+          <div class="recipe-name">${r.name}</div>
+          <div class="recipe-meta">
+            <span class="rtag rt-time">⏱ ${r.time}</span>
+            <span class="rtag rt-cal">🔥 ${r.cals} kcal</span>
+            <span class="rtag rt-pro">💪 ${r.protein}g</span>
+            <span class="rtag rt-diff">${r.diff}</span>
+            <span class="rtag rt-cost">$${r.cost.toFixed(2)}/serve</span>
+            ${inList?'<span class="rtag rt-inlist">In list ✓</span>':''}
+          </div>
+        </div>
+        <div class="recipe-right">
+          <div class="star-btn" onclick="event.stopPropagation();toggleFav('${r.id}')">${isFav?'⭐':'☆'}</div>
+          <div class="recipe-chevron">${isOpen?'▲':'▼'}</div>
+        </div>
+      </div>
+      <div class="recipe-body${isOpen?' on':''}">
+        <div class="rb-sec">Ingredients <span style="color:var(--purple);font-size:11px">(Woolies Paddington prices)</span></div>
+        ${r.ingredients.map(ing=>`<div class="ing-row"><span style="flex:1">${ing.n}</span><span style="color:var(--muted);font-size:12px;margin:0 8px">${ing.q}</span><span class="ing-price">$${ing.p.toFixed(2)}</span></div>`).join('')}
+        <div class="macro-row">
+          <div class="macro-box"><div class="macro-val">${r.cals}</div><div class="macro-lbl">kcal</div></div>
+          <div class="macro-box"><div class="macro-val">${r.protein}g</div><div class="macro-lbl">protein</div></div>
+          <div class="macro-box"><div class="macro-val">${r.carbs}g</div><div class="macro-lbl">carbs</div></div>
+          <div class="macro-box"><div class="macro-val">${r.fat}g</div><div class="macro-lbl">fat</div></div>
+        </div>
+        <div class="rb-sec">Steps</div>
+        ${r.steps.map((s,i)=>`<div class="step-row"><div class="step-num">${i+1}</div><div>${s}</div></div>`).join('')}
+        <div style="margin-top:12px">
+          <div class="btn ${inList?'red':'green'}" onclick="toggleShop('${r.id}')">${inList?'Remove from list':'Add to shopping list'}</div>
+        </div>
+      </div>`;
+    rl.appendChild(card);
+  });
+  renderShopList();
+}
+
+function toggleRecipe(id){openRecipes[id]=!openRecipes[id];save();renderRecipes();}
+
+function toggleFav(id){
+  if(favs.includes(id))favs=favs.filter(f=>f!==id);else favs.push(id);
+  save();renderRecipes();
+}
+
+function toggleShop(recipeId){
+  const r=RECIPES.find(x=>x.id===recipeId);if(!r)return;
+  const exists=shopItems.some(i=>i.recipeId===recipeId);
+  if(exists){shopItems=shopItems.filter(i=>i.recipeId!==recipeId);}
+  else{r.ingredients.forEach(ing=>shopItems.push({recipeId,name:ing.n,qty:ing.q,price:ing.p,id:recipeId+'_'+ing.n}));}
+  save();renderRecipes();
+}
+
+function renderShopList(){
+  const container=document.getElementById('shop-container');
+  if(shopItems.length===0){
+    container.innerHTML='<div style="padding:20px;text-align:center;color:var(--faint);font-size:13px">Open a recipe → Add to list</div>';
+    document.getElementById('shop-total').textContent='$0.00 est.';
+    document.getElementById('shop-count').textContent='0 items';return;
+  }
+  const byRecipe={};
+  shopItems.forEach(item=>{if(!byRecipe[item.recipeId])byRecipe[item.recipeId]=[];byRecipe[item.recipeId].push(item);});
+  let html='';let total=0;
+  Object.keys(byRecipe).forEach(rid=>{
+    const r=RECIPES.find(x=>x.id===rid);
+    html+=`<div class="shop-cat">${r?r.name:'Items'}</div>`;
+    byRecipe[rid].forEach(item=>{
+      const checked=shopChecked[item.id];
+      total+=item.price;
+      html+=`<div class="shop-item${checked?' ticked':''}" onclick="toggleCheck('${item.id}')">
+        <div class="shop-check${checked?' on':''}"></div>
+        <div class="shop-name">${item.name}</div>
+        <div class="shop-detail">${item.qty}<br><span style="color:var(--purple)">$${item.price.toFixed(2)}</span></div>
+      </div>`;
+    });
+  });
+  container.innerHTML=html;
+  const done=Object.values(shopChecked).filter(Boolean).length;
+  document.getElementById('shop-total').textContent=`$${total.toFixed(2)} est.`;
+  document.getElementById('shop-count').textContent=`${done}/${shopItems.length} ticked`;
+}
+
+function toggleCheck(id){shopChecked[id]=!shopChecked[id];save();renderShopList();}
+function clearShop(){
+  if(confirm('Clear shopping list?')){
+    shopItems=[];shopChecked={};save();
+    renderShopList();
+    // re-render recipes too so In list badges clear
+    if(document.getElementById('pg-recipes').classList.contains('on'))renderRecipes();
   }
 }
 
-function exportData() {
-  const area = document.getElementById('export-area');
-  const importRow = document.getElementById('import-btn-row');
-  area.style.display = 'block';
-  area.value = JSON.stringify({ exState, trackerData, currentMode, currentDay });
-  area.readOnly = true;
-  importRow.style.display = 'none';
+function suggestMeals(){
+  const pool=favs.length>0?RECIPES.filter(r=>favs.includes(r.id)):RECIPES;
+  const shuffle=[...pool].sort(()=>Math.random()-0.5);
+  let total=0;const picked=[];
+  for(const r of shuffle){
+    if(total+r.cals<=3200){picked.push(r);total+=r.cals;}
+    if(total>=2800)break;
+  }
+  if(picked.length===0){alert('No recipes available. Add some favourites first!');return;}
+  const msg=picked.map(r=>`• ${r.name} (${r.cals} kcal)`).join('\n');
+  alert(`Today's meals (~${total} kcal):\n\n${msg}\n\nTap each recipe to see how to make it.`);
+}
+
+// ─── EXPORT / IMPORT ───────────────────────────────────────────────────────
+function exportData(){
+  const area=document.getElementById('export-area');
+  const d={currentMode,currentDay,exState,calData,weightLog,shopItems,shopChecked,favs,activeFilter,openRecipes,sessionNotes};
+  area.value=JSON.stringify(d);area.style.display='block';
   area.select();
+  try{navigator.clipboard.writeText(area.value).then(()=>alert('Backup copied to clipboard! Paste it somewhere safe.'));}
+  catch(e){alert('Select all text in the box below and copy it manually.');}
+}
+function showImport(){
+  const area=document.getElementById('export-area');
+  area.value='';area.style.display='block';area.readOnly=false;
+  area.placeholder='Paste your backup data here...';
+  document.getElementById('import-row').style.display='flex';
+  area.focus();
+}
+function importData(){
+  try{
+    const d=JSON.parse(document.getElementById('export-area').value);
+    if(d.exState)exState=d.exState;if(d.calData)calData=d.calData;
+    if(d.weightLog)weightLog=d.weightLog;
+    if(d.currentMode)currentMode=d.currentMode;if(d.currentDay)currentDay=d.currentDay;
+    if(d.shopItems)shopItems=d.shopItems;if(d.shopChecked)shopChecked=d.shopChecked;
+    if(d.favs)favs=d.favs;if(d.sessionNotes)sessionNotes=d.sessionNotes;
+    save();setMode(currentMode);cancelImport();
+    alert('Imported successfully!');
+  }catch(e){alert('Invalid backup data. Make sure you pasted the full export.');}
+}
+function cancelImport(){
+  const area=document.getElementById('export-area');
+  area.style.display='none';area.value='';area.readOnly=false;
+  document.getElementById('import-row').style.display='none';
 }
 
-function importData() {
-  try {
-    const d = JSON.parse(document.getElementById('export-area').value);
-    if (d.exState) exState = d.exState;
-    if (d.trackerData) trackerData = d.trackerData;
-    if (d.currentMode) currentMode = d.currentMode;
-    if (d.currentDay) currentDay = d.currentDay;
-    saveState();
-    renderDayTabs();
-    renderExercises();
-    renderTracker();
-    cancelImport();
-    alert('Data imported successfully.');
-  } catch(e) { alert('Invalid backup data.'); }
-}
-
-function cancelImport() {
-  const area = document.getElementById('export-area');
-  area.style.display = 'none';
-  area.readOnly = false;
-  area.value = '';
-  document.getElementById('import-btn-row').style.display = 'none';
-}
-
-document.getElementById('export-area').addEventListener('input', function() {
-  document.getElementById('import-btn-row').style.display = this.value.trim() ? 'flex' : 'none';
-  this.readOnly = false;
-});
-
-// Init
+// ─── INIT ──────────────────────────────────────────────────────────────────
 setMode(currentMode);
 renderDayTabs();
 renderExercises();
+updateLogBtn();
+updateStorageBar();
 </script>
 </body>
 </html>
