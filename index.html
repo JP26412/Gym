@@ -874,7 +874,60 @@ function drawChart(){
   });
 }
 
-// ─── RECIPES ───────────────────────────────────────────────────────────────
+// Full product prices at Woolies Paddington
+const FULL_PRICES={
+  'Woolworths rolled oats 1kg':3.50,
+  'Full cream milk 2L (Woolworths)':2.80,
+  'Full cream milk 2L':2.80,
+  'Free range eggs 12pk':5.50,
+  'Banana':0.35,
+  'Allowrie peanut butter 375g':4.50,
+  'Capilano honey 500g':8.00,
+  'Woolworths Greek yoghurt 1kg':5.00,
+  'Mixed nuts Woolworths 375g':8.00,
+  'Old El Paso flour tortillas 8pk':4.50,
+  'Woolworths shredded cheese 250g':4.50,
+  'Sanitarium Weetbix 750g':4.20,
+  'Woolworths chicken breast 1kg':9.00,
+  'Woolworths white rice 2kg':3.00,
+  'Woolworths frozen mixed veg 1kg':2.50,
+  'Kikkoman soy sauce 250ml':3.50,
+  'Garlic powder':2.50,
+  'Italian herbs':2.00,
+  'Olive oil':5.50,
+  'Woolworths tuna in brine 425g':4.50,
+  'Sesame oil (optional)':4.00,
+  'Woolworths cottage cheese 500g':4.50,
+  'Large potato':1.00,
+  'Salt, pepper, paprika':2.00,
+  'Woolworths beef mince 500g':7.00,
+  'Woolworths pasta spaghetti 500g':1.80,
+  'Mutti passata 700ml':3.50,
+  'Garlic cloves':1.50,
+  'Woolworths chicken thighs 1kg':7.00,
+  'Woolworths frozen stir fry veg 1kg':2.50,
+  'Ayam oyster sauce 200ml':3.50,
+  'Woolworths pasta penne 500g':1.80,
+  'Woolworths diced tomatoes 400g':1.10,
+  'Woolworths coconut milk 400ml':1.90,
+  'Clive of India curry powder':3.00,
+  'Western Star butter 250g':5.00,
+  'Woolworths instant noodles 5pk':2.00,
+  'Woolworths beef stock 1L':2.20,
+  'Woolworths washed potatoes 1kg':3.50,
+  'Lemon':0.80,
+  'Woolworths sourdough loaf 680g':4.00,
+  'Cherry tomatoes 250g punnet':3.50,
+  'Woolworths rice cakes 100g':2.00,
+  'Woolworths pitted dates 500g':5.00,
+  'Baking powder':2.00,
+  'Olive oil spray':4.50,
+  'Salt & pepper':2.00,
+  'Dried oregano':2.00,
+  'Spinach leaves':3.00,
+};
+
+function getFullPrice(name){return FULL_PRICES[name]||null;}
 function renderRecipes(){
   // Filter bar
   const fb=document.getElementById('filter-bar');fb.innerHTML='';
@@ -950,7 +1003,7 @@ function toggleShop(recipeId){
   const r=RECIPES.find(x=>x.id===recipeId);if(!r)return;
   const exists=shopItems.some(i=>i.recipeId===recipeId);
   if(exists){shopItems=shopItems.filter(i=>i.recipeId!==recipeId);}
-  else{r.ingredients.forEach(ing=>shopItems.push({recipeId,name:ing.n,qty:ing.q,price:ing.p,id:recipeId+'_'+ing.n}));}
+  else{r.ingredients.forEach(ing=>shopItems.push({recipeId,name:ing.n,qty:ing.q,price:ing.p,fullPrice:getFullPrice(ing.n),id:recipeId+'_'+ing.n}));}
   save();renderRecipes();
 }
 
@@ -969,11 +1022,12 @@ function renderShopList(){
     html+=`<div class="shop-cat">${r?r.name:'Items'}</div>`;
     byRecipe[rid].forEach(item=>{
       const checked=shopChecked[item.id];
-      total+=item.price;
+      const displayPrice=item.fullPrice||item.price;
+      total+=displayPrice;
       html+=`<div class="shop-item${checked?' ticked':''}" onclick="toggleCheck('${item.id}')">
         <div class="shop-check${checked?' on':''}"></div>
         <div class="shop-name">${item.name}</div>
-        <div class="shop-detail">${item.qty}<br><span style="color:var(--purple)">$${item.price.toFixed(2)}</span></div>
+        <div class="shop-detail">${item.qty}<br><span style="color:var(--purple)">$${displayPrice.toFixed(2)}</span></div>
       </div>`;
     });
   });
